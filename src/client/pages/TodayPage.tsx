@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, isUnauthorized } from "../api";
+import { localizedText, useI18n, type LocalizedText } from "../i18n";
 import type { ChecklistTemplatePresence, PediatricSummaryPayload, ReferenceTargetsPayload, ShowToast, StatusDailySummary, StatusEventPreview, StatusOverviewPayload } from "../types";
 import { formatNumber, formatTemperature, temperatureMethodLabel } from "../utils/format";
 import { referenceBadgeText, referenceForSlot, referenceStatusClass, type SummaryReferenceSlot } from "../utils/reference-targets";
@@ -15,6 +16,7 @@ interface TodayPageProps {
 type SummaryRange = "24h" | "3d" | "7d";
 
 export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: TodayPageProps) {
+  const { text: tx } = useI18n();
   const [overview, setOverview] = useState<StatusOverviewPayload | null>(null);
   const [summaryRange, setSummaryRange] = useState<SummaryRange>("24h");
   const [pediatricSummary, setPediatricSummary] = useState<PediatricSummaryPayload | null>(null);
@@ -28,11 +30,11 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
       setOverview(await api<StatusOverviewPayload>("/api/status/overview?days=7"));
     } catch (err) {
       if (isUnauthorized(err)) return onUnauthorized();
-      setError(err instanceof Error ? err.message : "加载失败");
+      setError(err instanceof Error ? err.message : tx({ en: "Failed to load", zh: "加载失败" }));
     } finally {
       setLoading(false);
     }
-  }, [onUnauthorized]);
+  }, [onUnauthorized, tx]);
 
   const loadPediatricSummary = useCallback(
     async (range: SummaryRange) => {
@@ -41,12 +43,12 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
         setPediatricSummary(await api<PediatricSummaryPayload>(`/api/status/pediatric-summary?range=${range}`));
       } catch (err) {
         if (isUnauthorized(err)) return onUnauthorized();
-        setError(err instanceof Error ? err.message : "问诊摘要加载失败");
+        setError(err instanceof Error ? err.message : tx({ en: "Failed to load visit summary", zh: "问诊摘要加载失败" }));
       } finally {
         setSummaryLoading(false);
       }
     },
-    [onUnauthorized]
+    [onUnauthorized, tx]
   );
 
   useEffect(() => {
@@ -66,9 +68,9 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
         body: JSON.stringify({ ended_at: nowIso() })
       });
       await load();
-      showToast("已结束趴趴时间");
+      showToast(tx({ en: "Tummy time ended", zh: "已结束趴趴时间" }));
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "结束失败");
+      showToast(err instanceof Error ? err.message : tx({ en: "Failed to end", zh: "结束失败" }));
     }
   }
 
@@ -81,20 +83,20 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
         body: JSON.stringify({ ended_at: nowIso() })
       });
       await load();
-      showToast("已结束亲喂");
+      showToast(tx({ en: "Breastfeed ended", zh: "已结束亲喂" }));
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "结束失败");
+      showToast(err instanceof Error ? err.message : tx({ en: "Failed to end", zh: "结束失败" }));
     }
   }
 
-  if (loading) return <div className="loading">正在加载状态总览...</div>;
+  if (loading) return <div className="loading">{tx({ en: "Loading status overview...", zh: "正在加载状态总览..." })}</div>;
   if (error || !overview) {
     return (
       <section className="panel">
-        <h1>今日</h1>
-        <p className="error-text">{error || "加载失败"}</p>
+        <h1>{tx({ en: "Today", zh: "今日" })}</h1>
+        <p className="error-text">{error || tx({ en: "Failed to load", zh: "加载失败" })}</p>
         <button className="primary" type="button" onClick={() => void load()}>
-          重试
+          {tx({ en: "Retry", zh: "重试" })}
         </button>
       </section>
     );
@@ -105,29 +107,33 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
       <header className="page-header">
         <div>
           <p className="eyebrow">{overview.today.local_date}</p>
-          <h1>今日状态</h1>
+          <h1>{tx({ en: "Today status", zh: "今日状态" })}</h1>
           <p className="muted">{profileStageText(overview.profile)}</p>
         </div>
         <button className="ghost small" type="button" onClick={onLogout}>
-          退出
+          {tx({ en: "Log out", zh: "退出" })}
         </button>
       </header>
 
       <section className="panel">
         <div className="section-head">
-          <h2>当前状态</h2>
-          <span>{overview.active_state.open_sleep_session || overview.active_state.open_tummy_time_session || overview.active_state.open_breast_session ? "进行中" : "平稳"}</span>
+          <h2>{tx({ en: "Current status", zh: "当前状态" })}</h2>
+          <span>
+            {overview.active_state.open_sleep_session || overview.active_state.open_tummy_time_session || overview.active_state.open_breast_session
+              ? tx({ en: "In progress", zh: "进行中" })
+              : tx({ en: "Settled", zh: "平稳" })}
+          </span>
         </div>
         {overview.active_state.open_sleep_session ? (
           <p>
-            睡眠中，已睡 {formatDuration(overview.active_state.open_sleep_session.elapsed_minutes)}
+            {tx({ en: "Sleeping, asleep for {duration}", zh: "睡眠中，已睡 {duration}" }, { duration: formatDuration(overview.active_state.open_sleep_session.elapsed_minutes) })}
           </p>
         ) : overview.active_state.open_breast_session ? (
-          <p>亲喂进行中，已记录 {formatDuration(overview.active_state.open_breast_session.elapsed_minutes)}</p>
+          <p>{tx({ en: "Breastfeeding, recorded for {duration}", zh: "亲喂进行中，已记录 {duration}" }, { duration: formatDuration(overview.active_state.open_breast_session.elapsed_minutes) })}</p>
         ) : overview.active_state.open_tummy_time_session ? (
-          <p>趴趴时间进行中，已记录 {formatDuration(overview.active_state.open_tummy_time_session.elapsed_minutes)}</p>
+          <p>{tx({ en: "Tummy time in progress, recorded for {duration}", zh: "趴趴时间进行中，已记录 {duration}" }, { duration: formatDuration(overview.active_state.open_tummy_time_session.elapsed_minutes) })}</p>
         ) : (
-          <p className="muted">当前无进行中状态。</p>
+          <p className="muted">{tx({ en: "No active status right now.", zh: "当前无进行中状态。" })}</p>
         )}
       </section>
 
@@ -155,37 +161,37 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
 
       <section className="panel">
         <div className="section-head">
-          <h2>趋势与环比</h2>
+          <h2>{tx({ en: "Trends and comparison", zh: "趋势与环比" })}</h2>
           <span>Timeline</span>
         </div>
-        <p className="muted">完整趋势图、事件筛选和环比回顾已移到 Timeline。</p>
+        <p className="muted">{tx({ en: "Full trend charts, event filters, and comparison review have moved to Timeline.", zh: "完整趋势图、事件筛选和环比回顾已移到 Timeline。" })}</p>
         <button className="secondary" type="button" onClick={() => onNavigate("/app/timeline?preset=last_7d&view=trends")}>
-          去 Timeline 看趋势
+          {tx({ en: "View trends in Timeline", zh: "去 Timeline 看趋势" })}
         </button>
       </section>
 
       <section className="panel">
         <div className="section-head">
-          <h2>数据质量提醒</h2>
+          <h2>{tx({ en: "Data quality reminders", zh: "数据质量提醒" })}</h2>
           <span>{overview.data_quality.length}</span>
         </div>
         {overview.data_quality.length ? (
           <div className="simple-list">
             {overview.data_quality.map((flag) => (
               <article key={`${flag.code}-${flag.related_event_id ?? ""}`}>
-                <strong>{flag.severity === "warning" ? "需要核对" : "提示"}</strong>
+                <strong>{flag.severity === "warning" ? tx({ en: "Needs review", zh: "需要核对" }) : tx({ en: "Note", zh: "提示" })}</strong>
                 <p>{flag.message}</p>
               </article>
             ))}
           </div>
         ) : (
-          <p className="empty">暂无需要核对的数据。</p>
+          <p className="empty">{tx({ en: "No data currently needs review.", zh: "暂无需要核对的数据。" })}</p>
         )}
       </section>
 
       <section className="panel">
         <div className="section-head">
-          <h2>问诊摘要</h2>
+          <h2>{tx({ en: "Visit summary", zh: "问诊摘要" })}</h2>
           <span>{rangeLabel(summaryRange)}</span>
         </div>
         <div className="segmented">
@@ -195,15 +201,15 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
             </button>
           ))}
         </div>
-        {summaryLoading ? <p className="loading-inline">正在生成摘要...</p> : null}
+        {summaryLoading ? <p className="loading-inline">{tx({ en: "Generating summary...", zh: "正在生成摘要..." })}</p> : null}
         {pediatricSummary ? (
           <>
-            <p className="notice">这不是诊断，请结合医生意见。</p>
+            <p className="notice">{tx({ en: "This is not a diagnosis. Use it together with clinician advice.", zh: "这不是诊断，请结合医生意见。" })}</p>
             <PediatricStructuredSections summary={pediatricSummary} />
             <textarea className="copy-textarea" readOnly value={pediatricSummary.plain_text} />
             <div className="sheet-actions">
               <button className="primary" type="button" onClick={() => void navigator.clipboard?.writeText(pediatricSummary.plain_text)}>
-                复制文本
+                {tx({ en: "Copy text", zh: "复制文本" })}
               </button>
             </div>
           </>
@@ -214,56 +220,57 @@ export function TodayPage({ onLogout, onNavigate, onUnauthorized, showToast }: T
 }
 
 function StatusSummaryCards({ summary, timezone, targets }: { summary: StatusDailySummary; timezone: string; targets: ReferenceTargetsPayload }) {
+  const { text: tx } = useI18n();
   return (
-    <section className="summary-grid" aria-label="今日状态摘要">
+    <section className="summary-grid" aria-label={tx({ en: "Today status summary", zh: "今日状态摘要" })}>
       <article>
-        <span>总喂养</span>
-        <strong>{summary.feeding.total_count} 次</strong>
-        <small>{summary.feeding.latest_feeding_at ? `${formatRelativeTime(summary.feeding.latest_feeding_at, timezone)}` : "暂无最近记录"}</small>
+        <span>{tx({ en: "Total feeding", zh: "总喂养" })}</span>
+        <strong>{tx({ en: "{count} times", zh: "{count} 次" }, { count: summary.feeding.total_count })}</strong>
+        <small>{summary.feeding.latest_feeding_at ? `${formatRelativeTime(summary.feeding.latest_feeding_at, timezone)}` : tx({ en: "No recent record", zh: "暂无最近记录" })}</small>
         <SummaryReference targets={targets} slot="feeding" />
       </article>
       <article>
-        <span>亲喂</span>
-        <strong>{summary.feeding.breast_count} 次</strong>
+        <span>{tx({ en: "Breastfeed", zh: "亲喂" })}</span>
+        <strong>{tx({ en: "{count} times", zh: "{count} 次" }, { count: summary.feeding.breast_count })}</strong>
         <small>{formatDuration(summary.feeding.breast_minutes_total)}</small>
       </article>
       <article>
-        <span>奶瓶</span>
-        <strong>{summary.feeding.bottle_count} 次</strong>
+        <span>{tx({ en: "Bottle", zh: "奶瓶" })}</span>
+        <strong>{tx({ en: "{count} times", zh: "{count} 次" }, { count: summary.feeding.bottle_count })}</strong>
         <small>{formatNumber(summary.feeding.bottle_ml_total)} ml</small>
         <SummaryReference targets={targets} slot="bottle" />
       </article>
       <article>
-        <span>尿布</span>
+        <span>{tx({ en: "Diaper", zh: "尿布" })}</span>
         <strong>
           {summary.diaper.pee_count}/{summary.diaper.poop_count}
         </strong>
-        <small>{summary.diaper.latest_diaper_at ? formatRelativeTime(summary.diaper.latest_diaper_at, timezone) : "小便 / 大便"}</small>
+        <small>{summary.diaper.latest_diaper_at ? formatRelativeTime(summary.diaper.latest_diaper_at, timezone) : tx({ en: "Pee / poop", zh: "小便 / 大便" })}</small>
         <SummaryReference targets={targets} slot="pee" />
       </article>
       <article>
-        <span>睡眠</span>
+        <span>{tx({ en: "Sleep", zh: "睡眠" })}</span>
         <strong>{formatDuration(summary.sleep.minutes_total)}</strong>
-        <small>最长 {formatDuration(summary.sleep.longest_minutes)}</small>
+        <small>{tx({ en: "Longest {duration}", zh: "最长 {duration}" }, { duration: formatDuration(summary.sleep.longest_minutes) })}</small>
         <SummaryReference targets={targets} slot="sleep" />
       </article>
       <article>
-        <span>体温</span>
+        <span>{tx({ en: "Temperature", zh: "体温" })}</span>
         <strong>{formatTemperature(summary.temperature.latest_c)}</strong>
         <small>
           {summary.temperature.latest_occurred_at
             ? `${formatRelativeTime(summary.temperature.latest_occurred_at, timezone)} · ${temperatureMethodLabel(summary.temperature.latest_method)}`
-            : `最高 ${formatTemperature(summary.temperature.max_c)}`}
+            : tx({ en: "Highest {temperature}", zh: "最高 {temperature}" }, { temperature: formatTemperature(summary.temperature.max_c) })}
         </small>
         <SummaryReference targets={targets} slot="temperature" />
       </article>
       <article>
-        <span>体重</span>
+        <span>{tx({ en: "Weight", zh: "体重" })}</span>
         <strong>{summary.growth.latest_weight_g == null ? "—" : `${summary.growth.latest_weight_g} g`}</strong>
       </article>
       <article>
-        <span>症状</span>
-        <strong>{summary.symptoms.count} 条</strong>
+        <span>{tx({ en: "Symptoms", zh: "症状" })}</span>
+        <strong>{tx({ en: "{count} records", zh: "{count} 条" }, { count: summary.symptoms.count })}</strong>
       </article>
     </section>
   );
@@ -287,32 +294,33 @@ function BirthHospitalCard({
   onCopySummary: () => void;
   onNavigate: (path: string) => void;
 }) {
+  const { text: tx } = useI18n();
   const ready = overview.birth_ready!;
   return (
     <section className="panel birth-ready-card">
       <div className="section-head">
-        <h2>出生住院准备</h2>
-        <span>出生第 {ready.birth_day_number} 天</span>
+        <h2>{tx({ en: "Birth hospital prep", zh: "出生住院准备" })}</h2>
+        <span>{tx({ en: "Day {day}", zh: "出生第 {day} 天" }, { day: ready.birth_day_number })}</span>
       </div>
       <div className="summary-grid compact">
         <article>
-          <span>出生日期</span>
+          <span>{tx({ en: "Birth date", zh: "出生日期" })}</span>
           <strong>{ready.child_birth_date}</strong>
         </article>
         <article>
-          <span>最近喂养</span>
+          <span>{tx({ en: "Latest feeding", zh: "最近喂养" })}</span>
           <strong>{eventPreviewText(ready.latest_feeding, overview.profile.timezone)}</strong>
         </article>
         <article>
-          <span>最近尿布</span>
+          <span>{tx({ en: "Latest diaper", zh: "最近尿布" })}</span>
           <strong>{eventPreviewText(ready.latest_diaper, overview.profile.timezone)}</strong>
         </article>
         <article>
-          <span>最近体温</span>
+          <span>{tx({ en: "Latest temperature", zh: "最近体温" })}</span>
           <strong>{birthReadyTemperatureText(ready, overview.profile.timezone)}</strong>
         </article>
         <article>
-          <span>最近体重</span>
+          <span>{tx({ en: "Latest weight", zh: "最近体重" })}</span>
           <strong>{ready.latest_weight_g == null ? "—" : `${ready.latest_weight_g} g`}</strong>
         </article>
         <TemplateStatusCard template={ready.checklist_templates.birth_hospital} />
@@ -320,38 +328,39 @@ function BirthHospitalCard({
       </div>
       <div className="row-actions">
         <button className="secondary small" type="button" onClick={() => onNavigate("/app/checklist")}>
-          打开出生住院期模板
+          {tx({ en: "Open birth hospital template", zh: "打开出生住院期模板" })}
         </button>
         <button className="secondary small" type="button" onClick={() => onNavigate("/app/checklist")}>
-          打开出生后第 1 周模板
+          {tx({ en: "Open first-week template", zh: "打开出生后第 1 周模板" })}
         </button>
         <button className="secondary small" type="button" disabled={!summaryText} onClick={onCopySummary}>
-          复制问诊摘要
+          {tx({ en: "Copy visit summary", zh: "复制问诊摘要" })}
         </button>
         <button className="primary small" type="button" onClick={() => onNavigate("/app")}>
-          记录喂养
+          {tx({ en: "Record feeding", zh: "记录喂养" })}
         </button>
         <button className="primary small" type="button" onClick={() => onNavigate("/app")}>
-          记录尿布
+          {tx({ en: "Record diaper", zh: "记录尿布" })}
         </button>
         <button className="primary small" type="button" onClick={() => onNavigate("/app")}>
-          记录体温
+          {tx({ en: "Record temperature", zh: "记录体温" })}
         </button>
         <button className="secondary small" type="button" onClick={() => onNavigate("/app/more")}>
-          记录体重
+          {tx({ en: "Record weight", zh: "记录体重" })}
         </button>
       </div>
-      <p className="notice">这里只汇总家庭已有记录和清单状态，不判断医院项目是否应该接受或拒绝。</p>
+      <p className="notice">{tx({ en: "This only summarizes family records and checklist status. It does not judge whether hospital items should be accepted or refused.", zh: "这里只汇总家庭已有记录和清单状态，不判断医院项目是否应该接受或拒绝。" })}</p>
     </section>
   );
 }
 
 function TemplateStatusCard({ template }: { template: ChecklistTemplatePresence }) {
+  const { text: tx } = useI18n();
   return (
     <article>
       <span>{template.title}</span>
-      <strong>{template.imported ? "已导入" : "未导入"}</strong>
-      <small>{template.imported_item_count} 项</small>
+      <strong>{template.imported ? tx({ en: "Imported", zh: "已导入" }) : tx({ en: "Not imported", zh: "未导入" })}</strong>
+      <small>{tx({ en: "{count} items", zh: "{count} 项" }, { count: template.imported_item_count })}</small>
     </article>
   );
 }
@@ -372,62 +381,63 @@ function FirstWeekPanel({
   onCloseBreast: () => void;
   onCloseTummyTime: () => void;
 }) {
+  const { text: tx } = useI18n();
   return (
     <section className="panel first-week-panel">
       <div className="section-head">
-        <h2>新生儿首周 24h</h2>
-        <span>滚动窗口</span>
+        <h2>{tx({ en: "Newborn first week 24h", zh: "新生儿首周 24h" })}</h2>
+        <span>{tx({ en: "Rolling window", zh: "滚动窗口" })}</span>
       </div>
       <div className="summary-grid compact">
         <article>
-          <span>喂养</span>
+          <span>{tx({ en: "Feeding", zh: "喂养" })}</span>
           <strong>{summary.feeding.total_count}</strong>
-          <small>次</small>
+          <small>{tx({ en: "times", zh: "次" })}</small>
         </article>
         <article>
-          <span>奶瓶</span>
+          <span>{tx({ en: "Bottle", zh: "奶瓶" })}</span>
           <strong>{summary.feeding.bottle_count ? `${formatNumber(summary.feeding.bottle_ml_total)} ml` : "—"}</strong>
         </article>
         <article>
-          <span>母乳</span>
+          <span>{tx({ en: "Breastfeed", zh: "母乳" })}</span>
           <strong>{summary.feeding.breast_count ? formatDuration(summary.feeding.breast_minutes_total) : "—"}</strong>
         </article>
         <article>
-          <span>湿尿布</span>
+          <span>{tx({ en: "Wet diapers", zh: "湿尿布" })}</span>
           <strong>{summary.diaper.pee_count}</strong>
-          <small>次</small>
+          <small>{tx({ en: "times", zh: "次" })}</small>
         </article>
         <article>
-          <span>大便</span>
+          <span>{tx({ en: "Poop", zh: "大便" })}</span>
           <strong>{summary.diaper.poop_count}</strong>
-          <small>次</small>
+          <small>{tx({ en: "times", zh: "次" })}</small>
         </article>
         <article>
-          <span>体温</span>
+          <span>{tx({ en: "Temperature", zh: "体温" })}</span>
           <strong>{formatTemperature(summary.temperature.latest_c)}</strong>
         </article>
         <article>
-          <span>体重</span>
+          <span>{tx({ en: "Weight", zh: "体重" })}</span>
           <strong>{summary.growth.latest_weight_g == null ? "—" : `${summary.growth.latest_weight_g} g`}</strong>
         </article>
         <article>
-          <span>睡眠中</span>
+          <span>{tx({ en: "Sleeping", zh: "睡眠中" })}</span>
           <strong>{activeState.open_sleep_session ? formatDuration(activeState.open_sleep_session.elapsed_minutes) : "—"}</strong>
         </article>
       </div>
       {activeState.open_tummy_time_session ? (
         <div className="inline-alert">
-          <span>趴趴时间进行中：{formatDuration(activeState.open_tummy_time_session.elapsed_minutes)}</span>
+          <span>{tx({ en: "Tummy time in progress: {duration}", zh: "趴趴时间进行中：{duration}" }, { duration: formatDuration(activeState.open_tummy_time_session.elapsed_minutes) })}</span>
           <button className="secondary small" type="button" onClick={onCloseTummyTime}>
-            结束趴趴时间
+            {tx({ en: "End tummy time", zh: "结束趴趴时间" })}
           </button>
         </div>
       ) : null}
       {activeState.open_breast_session ? (
         <div className="inline-alert">
-          <span>亲喂进行中：{formatDuration(activeState.open_breast_session.elapsed_minutes)}</span>
+          <span>{tx({ en: "Breastfeeding: {duration}", zh: "亲喂进行中：{duration}" }, { duration: formatDuration(activeState.open_breast_session.elapsed_minutes) })}</span>
           <button className="secondary small" type="button" onClick={onCloseBreast}>
-            结束亲喂
+            {tx({ en: "End breastfeed", zh: "结束亲喂" })}
           </button>
         </div>
       ) : null}
@@ -436,11 +446,12 @@ function FirstWeekPanel({
 }
 
 function ReferenceTargetsCard({ targets }: { targets: ReferenceTargetsPayload }) {
+  const { text: tx } = useI18n();
   return (
     <details className="panel collapsible-panel">
       <summary className="section-head">
-        <h2>今日参考</h2>
-        <span>{targets.age_context.birth_day_number ? `出生第 ${targets.age_context.birth_day_number} 天` : "待设置"}</span>
+        <h2>{tx({ en: "Today references", zh: "今日参考" })}</h2>
+        <span>{targets.age_context.birth_day_number ? tx({ en: "Day {day}", zh: "出生第 {day} 天" }, { day: targets.age_context.birth_day_number }) : tx({ en: "Not set", zh: "待设置" })}</span>
       </summary>
       {targets.missing_birth_date_message ? <p className="empty">{targets.missing_birth_date_message}</p> : null}
       {targets.items.length ? (
@@ -456,65 +467,78 @@ function ReferenceTargetsCard({ targets }: { targets: ReferenceTargetsPayload })
           ))}
         </div>
       ) : targets.missing_birth_date_message ? null : (
-        <p className="empty">当前阶段暂无适用参考项。</p>
+        <p className="empty">{tx({ en: "No reference items apply to the current stage.", zh: "当前阶段暂无适用参考项。" })}</p>
       )}
     </details>
   );
 }
 
 function ReferenceTargetMetrics({ item }: { item: ReferenceTargetsPayload["items"][number] }) {
-  const current = item.current_value == null || !item.unit ? "记录：—" : `记录：${formatNumber(item.current_value)} ${item.unit}`;
+  const current =
+    item.current_value == null || !item.unit
+      ? localizedText({ en: "Record: —", zh: "记录：—" })
+      : localizedText({ en: "Record: {value} {unit}", zh: "记录：{value} {unit}" }, { value: formatNumber(item.current_value), unit: item.unit });
   return (
     <div className="reference-metrics">
       <span>{current}</span>
-      {item.target_label ? <span>参考：{item.target_label}</span> : null}
+      {item.target_label ? <span>{localizedText({ en: "Reference: {target}", zh: "参考：{target}" }, { target: item.target_label })}</span> : null}
     </div>
   );
 }
 
 function targetStatusLabel(status: ReferenceTargetsPayload["items"][number]["status"]): string {
-  if (status === "below_reference") return "少于参考";
-  if (status === "above_reference") return "高于参考";
-  if (status === "red_flag_recorded") return "需联系医生";
-  if (status === "within_reference") return "记录对照";
-  if (status === "not_enough_data") return "记录不足";
-  return "参考";
+  if (status === "below_reference") return localizedText({ en: "Below reference", zh: "少于参考" });
+  if (status === "above_reference") return localizedText({ en: "Above reference", zh: "高于参考" });
+  if (status === "red_flag_recorded") return localizedText({ en: "Contact clinician", zh: "需联系医生" });
+  if (status === "within_reference") return localizedText({ en: "Compared", zh: "记录对照" });
+  if (status === "not_enough_data") return localizedText({ en: "Not enough data", zh: "记录不足" });
+  return localizedText({ en: "Reference", zh: "参考" });
 }
 
 function TrendCards({ days }: { days: StatusDailySummary[] }) {
+  const { text: tx } = useI18n();
   const maxSleep = Math.max(1, ...days.map((day) => day.sleep.minutes_total));
   const maxFeed = Math.max(1, ...days.map((day) => day.feeding.total_count));
   return (
     <section className="panel">
       <div className="section-head">
-        <h2>7 天趋势</h2>
-        <span>{days.length} 天</span>
+        <h2>{tx({ en: "7-day trend", zh: "7 天趋势" })}</h2>
+        <span>{tx({ en: "{count} days", zh: "{count} 天" }, { count: days.length })}</span>
       </div>
       <div className="trend-grid">
-        <TrendMetric label="喂养次数" value={sum(days, (day) => day.feeding.total_count)} unit="次" />
-        <TrendMetric label="奶瓶总量" value={sum(days, (day) => day.feeding.bottle_ml_total)} unit="ml" />
-        <TrendMetric label="睡眠总时长" value={sum(days, (day) => day.sleep.minutes_total)} unit="分钟" />
-        <TrendMetric label="最长睡眠" value={Math.max(0, ...days.map((day) => day.sleep.longest_minutes))} unit="分钟" />
-        <TrendMetric label="小便/大便" value={`${sum(days, (day) => day.diaper.pee_count)}/${sum(days, (day) => day.diaper.poop_count)}`} unit="" />
+        <TrendMetric label={{ en: "Feeding count", zh: "喂养次数" }} value={sum(days, (day) => day.feeding.total_count)} unit={tx({ en: "times", zh: "次" })} />
+        <TrendMetric label={{ en: "Bottle total", zh: "奶瓶总量" }} value={sum(days, (day) => day.feeding.bottle_ml_total)} unit="ml" />
+        <TrendMetric label={{ en: "Sleep duration", zh: "睡眠总时长" }} value={sum(days, (day) => day.sleep.minutes_total)} unit={tx({ en: "min", zh: "分钟" })} />
+        <TrendMetric label={{ en: "Longest sleep", zh: "最长睡眠" }} value={Math.max(0, ...days.map((day) => day.sleep.longest_minutes))} unit={tx({ en: "min", zh: "分钟" })} />
+        <TrendMetric label={{ en: "Pee/poop", zh: "小便/大便" }} value={`${sum(days, (day) => day.diaper.pee_count)}/${sum(days, (day) => day.diaper.poop_count)}`} unit="" />
       </div>
-      <div className="mini-bars" aria-label="睡眠趋势">
+      <div className="mini-bars" aria-label={tx({ en: "Sleep trend", zh: "睡眠趋势" })}>
         {days.map((day) => (
-          <span key={day.local_date} title={`${day.local_date} 睡眠 ${day.sleep.minutes_total} 分钟`} style={{ height: `${Math.max(8, (day.sleep.minutes_total / maxSleep) * 72)}px` }} />
+          <span
+            key={day.local_date}
+            title={tx({ en: "{date} sleep {minutes} min", zh: "{date} 睡眠 {minutes} 分钟" }, { date: day.local_date, minutes: day.sleep.minutes_total })}
+            style={{ height: `${Math.max(8, (day.sleep.minutes_total / maxSleep) * 72)}px` }}
+          />
         ))}
       </div>
-      <div className="mini-bars subtle" aria-label="喂养趋势">
+      <div className="mini-bars subtle" aria-label={tx({ en: "Feeding trend", zh: "喂养趋势" })}>
         {days.map((day) => (
-          <span key={day.local_date} title={`${day.local_date} 喂养 ${day.feeding.total_count} 次`} style={{ height: `${Math.max(8, (day.feeding.total_count / maxFeed) * 52)}px` }} />
+          <span
+            key={day.local_date}
+            title={tx({ en: "{date} feeding {count} times", zh: "{date} 喂养 {count} 次" }, { date: day.local_date, count: day.feeding.total_count })}
+            style={{ height: `${Math.max(8, (day.feeding.total_count / maxFeed) * 52)}px` }}
+          />
         ))}
       </div>
     </section>
   );
 }
 
-function TrendMetric({ label, value, unit }: { label: string; value: number | string; unit: string }) {
+function TrendMetric({ label, value, unit }: { label: LocalizedText; value: number | string; unit: string }) {
+  const { text: tx } = useI18n();
   return (
     <article>
-      <span>{label}</span>
+      <span>{tx(label)}</span>
       <strong>{typeof value === "number" ? formatNumber(value) : value}</strong>
       {unit ? <small>{unit}</small> : null}
     </article>
@@ -524,39 +548,42 @@ function TrendMetric({ label, value, unit }: { label: string; value: number | st
 function eventPreviewText(event: StatusEventPreview | null, timezone: string): string {
   if (!event) return "—";
   let label: string = event.event_type;
-  if (event.event_type === "feed_breast") label = "母乳";
-  if (event.event_type === "feed_bottle") label = event.amount_value == null ? "奶瓶" : `奶瓶 ${formatNumber(event.amount_value)} ml`;
-  if (event.event_type === "diaper_pee") label = "小便";
-  if (event.event_type === "diaper_poop") label = "大便";
+  if (event.event_type === "feed_breast") label = localizedText({ en: "Breastfeed", zh: "母乳" });
+  if (event.event_type === "feed_bottle") label = event.amount_value == null ? localizedText({ en: "Bottle", zh: "奶瓶" }) : localizedText({ en: "Bottle {value} ml", zh: "奶瓶 {value} ml" }, { value: formatNumber(event.amount_value) });
+  if (event.event_type === "diaper_pee") label = localizedText({ en: "Pee", zh: "小便" });
+  if (event.event_type === "diaper_poop") label = localizedText({ en: "Poop", zh: "大便" });
   return `${label} · ${formatTime(event.occurred_at, timezone)}`;
 }
 
 function profileStageText(profile: StatusOverviewPayload["profile"]): string {
   if (profile.phase === "pregnancy_prebirth") {
-    return profile.days_to_due == null ? "出生前" : `出生前 · 距预产期 ${profile.days_to_due} 天`;
+    return profile.days_to_due == null
+      ? localizedText({ en: "Before birth", zh: "出生前" })
+      : localizedText({ en: "Before birth · {days} days to due date", zh: "出生前 · 距预产期 {days} 天" }, { days: profile.days_to_due });
   }
-  return profile.birth_day_number == null ? "出生后" : `出生第 ${profile.birth_day_number} 天`;
+  return profile.birth_day_number == null ? localizedText({ en: "After birth", zh: "出生后" }) : localizedText({ en: "Day {day}", zh: "出生第 {day} 天" }, { day: profile.birth_day_number });
 }
 
 function PediatricStructuredSections({ summary }: { summary: PediatricSummaryPayload }) {
-  const labels: Record<keyof PediatricSummaryPayload["structured"], string> = {
-    basic_info: "基本信息",
-    feeding: "喂养",
-    diaper: "尿布",
-    sleep: "睡眠",
-    temperature: "体温",
-    growth: "生长",
-    symptoms: "症状",
-    medicines: "用药",
-    notes: "备注",
-    data_quality: "数据质量",
-    reference_targets: "参考对照"
+  const { text: tx } = useI18n();
+  const labels: Record<keyof PediatricSummaryPayload["structured"], LocalizedText> = {
+    basic_info: { en: "Basic info", zh: "基本信息" },
+    feeding: { en: "Feeding", zh: "喂养" },
+    diaper: { en: "Diaper", zh: "尿布" },
+    sleep: { en: "Sleep", zh: "睡眠" },
+    temperature: { en: "Temperature", zh: "体温" },
+    growth: { en: "Growth", zh: "生长" },
+    symptoms: { en: "Symptoms", zh: "症状" },
+    medicines: { en: "Medicines", zh: "用药" },
+    notes: { en: "Notes", zh: "备注" },
+    data_quality: { en: "Data quality", zh: "数据质量" },
+    reference_targets: { en: "Reference targets", zh: "参考对照" }
   };
   return (
     <div className="simple-list">
       {(Object.keys(labels) as Array<keyof PediatricSummaryPayload["structured"]>).map((key) => (
         <article key={key}>
-          <strong>{labels[key]}</strong>
+          <strong>{tx(labels[key])}</strong>
           {summary.structured[key].map((line, index) => (
             <p key={`${key}-${index}`}>{line}</p>
           ))}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { EventType } from "../types";
+import { localizedText } from "../i18n";
 import { formatDuration, formatTime, minutesSince } from "../utils/time";
 
 interface ActiveSessionPreview {
@@ -17,7 +18,15 @@ interface ActiveSessionCardProps {
   onWake?: () => void;
 }
 
-export function ActiveSessionCard({ session, timezone, busy, title = "睡眠中", actionLabel = "睡醒", elapsedLabel = "已睡", onWake }: ActiveSessionCardProps) {
+export function ActiveSessionCard({
+  session,
+  timezone,
+  busy,
+  title = localizedText({ en: "Sleeping", zh: "睡眠中" }),
+  actionLabel = localizedText({ en: "Wake up", zh: "睡醒" }),
+  elapsedLabel = localizedText({ en: "asleep for", zh: "已睡" }),
+  onWake
+}: ActiveSessionCardProps) {
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -31,10 +40,14 @@ export function ActiveSessionCard({ session, timezone, busy, title = "睡眠中"
   return (
     <section className="active-session">
       <div>
-        <p className="eyebrow">当前状态</p>
+        <p className="eyebrow">{localizedText({ en: "Current status", zh: "当前状态" })}</p>
         <h2>{title}</h2>
         <p>
-          开始 {formatTime(session.occurred_at, timezone)} · {elapsedLabel} {formatDuration(minutesSince(session.occurred_at))}
+          {localizedText({ en: "Started {time} · {elapsedLabel} {elapsed}", zh: "开始 {time} · {elapsedLabel} {elapsed}" }, {
+            time: formatTime(session.occurred_at, timezone),
+            elapsedLabel,
+            elapsed: formatDuration(minutesSince(session.occurred_at))
+          })}
         </p>
       </div>
       {onWake ? (

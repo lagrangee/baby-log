@@ -1,5 +1,7 @@
 import checklistTemplatesSeed from "../data/checklist-templates.json";
 import { ValidationError } from "../../shared/content";
+import { normalizeLanguage, type Language } from "../../shared/i18n";
+import { localizeChecklistItemRecord, localizeChecklistTemplate, localizeChecklistTemplateItem } from "./checklist-i18n";
 import type {
   AppProfile,
   ChecklistActivation,
@@ -142,7 +144,8 @@ interface ImportTemplateInput {
 export class ChecklistService {
   constructor(private readonly store: Store) {}
 
-  async listTemplates(nowIso = new Date().toISOString()): Promise<ChecklistTemplateLibraryEntry[]> {
+  async listTemplates(nowIso = new Date().toISOString(), languageInput: unknown = "zh"): Promise<ChecklistTemplateLibraryEntry[]> {
+    const language = normalizeLanguage(languageInput, "zh");
     const profile = await this.store.getProfile();
     const today = localDateForTimezone(nowIso, profile.timezone);
     const currentPhase = inferChecklistPhase(profile, today);
@@ -155,7 +158,7 @@ export class ChecklistService {
         const latestImport = imports
           .filter((item) => item.template_code === template.template_code && item.template_version === template.template_version)
           .sort((a, b) => b.imported_at.localeCompare(a.imported_at))[0];
-        const normalizedItems = template.items.map((item, index) => normalizeTemplateItem(template, item, index));
+        const normalizedItems = template.items.map((item, index) => localizeChecklistTemplateItem(normalizeTemplateItem(template, item, index), language));
         const importableItems = normalizedItems.filter(shouldCreateOnTemplateImport);
         const importedItems = items.filter(
           (item) =>
@@ -168,7 +171,7 @@ export class ChecklistService {
         const recommendedNow = !referenceOnly && (stageStatus === "current_stage" || isBirthStartupTemplateRecommendation(template, profile, today));
         const importedStatus = getImportedStatus(importedItems.length, importableItems.length);
 
-        return {
+        return localizeChecklistTemplate({
           template_code: template.template_code,
           template_version: template.template_version,
           title: template.title,
@@ -187,7 +190,7 @@ export class ChecklistService {
           imported_item_count: importedItems.length,
           latest_imported_at: latestImport?.imported_at ?? null,
           items: normalizedItems
-        };
+        }, language);
       });
   }
 
@@ -413,7 +416,8 @@ export class ChecklistService {
     return this.store.updateChecklistItem(id, patch, nowIso);
   }
 
-  async listSections(nowIso: string): Promise<ChecklistSections> {
+  async listSections(nowIso: string, languageInput: unknown = "zh"): Promise<ChecklistSections> {
+    const language = normalizeLanguage(languageInput, "zh");
     const profile = await this.store.getProfile();
     const today = localDateForTimezone(nowIso, profile.timezone);
     const currentPhase = inferChecklistPhase(profile, today);
@@ -439,13 +443,17 @@ export class ChecklistService {
         reference_count: reference.length,
         total_active_count: current.length + upcoming.length
       },
-      current,
-      upcoming,
-      reference,
-      completed,
-      skipped_hidden: skippedHidden
+      current: localizeChecklistItems(current, language),
+      upcoming: localizeChecklistItems(upcoming, language),
+      reference: localizeChecklistItems(reference, language),
+      completed: localizeChecklistItems(completed, language),
+      skipped_hidden: localizeChecklistItems(skippedHidden, language)
     };
   }
+}
+
+function localizeChecklistItems(items: ChecklistItemRecord[], language: Language): ChecklistItemRecord[] {
+  return items.map((item) => localizeChecklistItemRecord(item, language));
 }
 
 function stagedTemplates(): ChecklistTemplateSeed[] {

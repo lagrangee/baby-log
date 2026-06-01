@@ -1,5 +1,5 @@
 import type { EventType, PrimaryEventType } from "../types";
-import { getCurrentLanguage } from "../i18n";
+import { getCurrentLanguage, localizedText } from "../i18n";
 import { PRIMARY_ACTIONS, eventLabel } from "../utils/format";
 
 export type QuickRecordType = PrimaryEventType | Extract<EventType, "growth_measurement">;
@@ -33,12 +33,11 @@ export const FAMILY_QUICK_ACTIONS: ReadonlyArray<QuickRecordAction> = [
 ];
 
 export function QuickRecordGrid({ hasOpenSleep, hasOpenBreast, busyType, actions = DEFAULT_QUICK_ACTIONS, onAction }: QuickRecordGridProps) {
-  const language = getCurrentLanguage();
   return (
-    <section className="quick-grid" aria-label={language === "zh" ? "快捷记录" : "Quick record"}>
+    <section className="quick-grid" aria-label={localizedText({ en: "Quick record", zh: "快捷记录" })}>
       {actions.map((action) => {
-        let label = action.type === "sleep_session" ? (hasOpenSleep ? (language === "zh" ? "睡醒" : "Wake up") : action.label) : action.label;
-        if (action.type === "feed_breast") label = hasOpenBreast ? (language === "zh" ? "结束亲喂" : "End breastfeed") : eventLabel("feed_breast");
+        let label = action.type === "sleep_session" ? (hasOpenSleep ? localizedText({ en: "Wake up", zh: "睡醒" }) : action.label) : action.label;
+        if (action.type === "feed_breast") label = hasOpenBreast ? localizedText({ en: "End breastfeed", zh: "结束亲喂" }) : eventLabel("feed_breast");
         return (
           <button
             key={action.type}

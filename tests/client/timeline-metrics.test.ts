@@ -3,19 +3,19 @@ import { visibleComparisonMetricItems, visibleTrendMetricItems } from "../../src
 
 describe("timeline metric visibility", () => {
   test("shows only temperature trend metrics when temperature is selected", () => {
-    expect(visibleTrendMetricItems(["temperature"]).map((item) => item.label)).toEqual(["最高体温"]);
+    expect(visibleTrendMetricItems(["temperature"]).map((item) => item.label)).toEqual(["Highest temperature"]);
   });
 
   test("shows only diaper trend metrics when diaper filters are selected", () => {
-    expect(visibleTrendMetricItems(["diaper_pee", "diaper_poop"]).map((item) => item.label)).toEqual(["小便", "大便"]);
+    expect(visibleTrendMetricItems(["diaper_pee", "diaper_poop"]).map((item) => item.label)).toEqual(["Pee", "Poop"]);
   });
 
   test("shows only temperature comparison metrics when temperature is selected", () => {
-    expect(visibleComparisonMetricItems(["temperature"]).map((item) => item.label)).toEqual(["最高体温"]);
+    expect(visibleComparisonMetricItems(["temperature"]).map((item) => item.label)).toEqual(["Highest temperature"]);
   });
 
   test("keeps the full trend set when there is no filter", () => {
-    expect(visibleTrendMetricItems([]).map((item) => item.label)).toContain("喂养次数");
-    expect(visibleTrendMetricItems([]).map((item) => item.label)).toContain("最高体温");
+    expect(visibleTrendMetricItems([]).map((item) => item.label)).toContain("Feeding count");
+    expect(visibleTrendMetricItems([]).map((item) => item.label)).toContain("Highest temperature");
   });
 });

@@ -12,6 +12,7 @@ import { buildGrowthCurvePayload } from "./services/growth-reference-service";
 import { buildTodaySummary } from "./services/summary-service";
 import { getStableChildFacts, updateStableChildFacts } from "./services/stable-child-facts-service";
 import { buildPediatricSummary, buildStatusDay, buildStatusOverview, buildStatusRangeAnalytics, buildStatusTimeline, buildStatusTrends, buildTodayReferenceTargets } from "./services/status-service";
+import { normalizeLanguage } from "../shared/i18n";
 import type { Actor, Store } from "./types";
 import { isValidDateOnly } from "./utils/time";
 
@@ -234,12 +235,12 @@ export async function handleApiRequest(request: Request, env: Env): Promise<Resp
 
   if (url.pathname === "/api/checklists/sections" && request.method === "GET") {
     await requireRole(request, env, store, "admin", nowIso);
-    return jsonResponse(await new ChecklistService(store).listSections(nowIso));
+    return jsonResponse(await new ChecklistService(store).listSections(nowIso, languageFromRequest(url)));
   }
 
   if (url.pathname === "/api/checklist-templates" && request.method === "GET") {
     await requireRole(request, env, store, "admin", nowIso);
-    return jsonResponse({ templates: await new ChecklistService(store).listTemplates(nowIso) });
+    return jsonResponse({ templates: await new ChecklistService(store).listTemplates(nowIso, languageFromRequest(url)) });
   }
 
   if (url.pathname === "/api/checklists/import-template" && request.method === "POST") {
@@ -609,6 +610,10 @@ function formatMachineHtmlValue(value: unknown): string {
 
 function escapeHtml(value: string): string {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+}
+
+function languageFromRequest(url: URL) {
+  return normalizeLanguage(url.searchParams.get("lang"), "zh");
 }
 
 async function login(request: Request, env: Env, store: Store, role: SessionRole, nowIso: string) {

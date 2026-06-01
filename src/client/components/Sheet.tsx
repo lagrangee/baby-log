@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useI18n } from "../i18n";
 
 interface SheetProps {
   title: string;
@@ -7,6 +8,7 @@ interface SheetProps {
 }
 
 export function Sheet({ title, children, onClose }: SheetProps) {
+  const { text: tx } = useI18n();
   return (
     <div className="sheet-overlay" role="presentation" onMouseDown={onClose}>
       <section
@@ -19,7 +21,7 @@ export function Sheet({ title, children, onClose }: SheetProps) {
         <header className="sheet-head">
           <h2 id="sheet-title">{title}</h2>
           <button className="ghost small" type="button" onClick={onClose}>
-            关闭
+            {tx({ en: "Close", zh: "关闭" })}
           </button>
         </header>
         {children}
@@ -27,4 +29,3 @@ export function Sheet({ title, children, onClose }: SheetProps) {
     </div>
   );
 }
-

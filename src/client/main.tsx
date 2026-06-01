@@ -6,6 +6,7 @@ import { AppShell } from "./components/AppShell";
 import { Toast } from "./components/Toast";
 import { LanguageProvider, useI18n } from "./i18n";
 import { ChecklistPage } from "./pages/ChecklistPage";
+import { GrowthPage } from "./pages/GrowthPage";
 import { LoginPage } from "./pages/LoginPage";
 import { MorePage } from "./pages/MorePage";
 import { ReadOnlyPage } from "./pages/ReadOnlyPage";
@@ -67,12 +68,13 @@ function App() {
     if (pathname === "/read") return <ReadOnlyPage onLogout={() => onLogout("read")} onUnauthorized={() => onUnauthorized("read")} />;
 
     if (pathname.startsWith("/app")) {
-      const activePath = ["/app/today", "/app/yesterday", "/app/timeline", "/app/checklist", "/app/more"].includes(pathname) ? pathname : "/app";
+      const activePath = ["/app/today", "/app/yesterday", "/app/growth", "/app/timeline", "/app/checklist", "/app/more"].includes(pathname) ? pathname : "/app";
       return (
         <AppShell activePath={activePath} onNavigate={navigate}>
           {activePath === "/app" ? <RecordPage onLogout={() => onLogout("admin")} onUnauthorized={() => onUnauthorized("admin")} showToast={showToast} /> : null}
           {activePath === "/app/today" ? <TodayPage onLogout={() => onLogout("admin")} onNavigate={navigate} onUnauthorized={() => onUnauthorized("admin")} showToast={showToast} /> : null}
           {activePath === "/app/yesterday" ? <YesterdayPage onUnauthorized={() => onUnauthorized("admin")} showToast={showToast} /> : null}
+          {activePath === "/app/growth" ? <GrowthPage onUnauthorized={() => onUnauthorized("admin")} /> : null}
           {activePath === "/app/timeline" ? (
             <TimelinePage
               search={path.includes("?") ? path.slice(path.indexOf("?")) : ""}

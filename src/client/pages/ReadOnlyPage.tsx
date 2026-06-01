@@ -4,7 +4,7 @@ import { DailyRecordOverview, type DailyRecordOverviewSection } from "../compone
 import { FAMILY_QUICK_ACTIONS, type QuickRecordType } from "../components/QuickRecordGrid";
 import { Sheet } from "../components/Sheet";
 import { TodayCardDetailSheet } from "../components/TodayCardDetailSheet";
-import { getCurrentLanguage, LanguageToggle } from "../i18n";
+import { getCurrentLanguage, localizedText, useI18n } from "../i18n";
 import type { TodaySummaryCardSlot } from "../components/TodaySummaryCards";
 import type { EventRecord, JsonRecord, ReadOnlySummaryPayload } from "../types";
 import { localInputValueInTimezone, toIsoFromLocalInputInTimezone } from "../utils/time";
@@ -48,20 +48,21 @@ function readOnlyTab(key: ReadOnlyTabKey, label: Record<"en" | "zh", string>): {
 }
 
 const TIME_OPTIONS = [
-  { minutes: 0, label: "刚刚" },
-  { minutes: 5, label: "5 分钟前" },
-  { minutes: 15, label: "15 分钟前" },
-  { minutes: 30, label: "30 分钟前" },
-  { minutes: 60, label: "1 小时前" }
+  { minutes: 0, label: { en: "Just now", zh: "刚刚" } },
+  { minutes: 5, label: { en: "5 min ago", zh: "5 分钟前" } },
+  { minutes: 15, label: { en: "15 min ago", zh: "15 分钟前" } },
+  { minutes: 30, label: { en: "30 min ago", zh: "30 分钟前" } },
+  { minutes: 60, label: { en: "1 hr ago", zh: "1 小时前" } }
 ];
 const BOTTLE_AMOUNTS = ["30", "60", "90", "120"];
 const TEMPERATURE_VALUES = ["36.5", "36.8", "37.0", "37.3"];
 const MILK_TYPE_OPTIONS = [
-  { value: "formula", label: "配方奶" },
-  { value: "breastmilk", label: "母乳瓶喂" }
+  { value: "formula", label: { en: "Formula", zh: "配方奶" } },
+  { value: "breastmilk", label: { en: "Expressed milk", zh: "母乳瓶喂" } }
 ] as const;
 
 export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
+  const { text: tx } = useI18n();
   const [data, setData] = useState<ReadOnlySummaryPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -84,11 +85,11 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
       setData(next);
     } catch (err) {
       if (isUnauthorized(err)) return onUnauthorized();
-      setError(err instanceof Error ? err.message : "加载失败");
+      setError(err instanceof Error ? err.message : tx({ en: "Failed to load", zh: "加载失败" }));
     } finally {
       setLoading(false);
     }
-  }, [onUnauthorized]);
+  }, [onUnauthorized, tx]);
 
   useEffect(() => {
     void load();
@@ -136,19 +137,19 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
         };
         if (recordSheet.action === "feed_bottle" || recordSheet.action === "temperature") {
           const amount = Number(amountValue);
-          if (!Number.isFinite(amount) || amount <= 0) throw new Error(recordSheet.action === "feed_bottle" ? "请填写奶量" : "请填写体温");
+          if (!Number.isFinite(amount) || amount <= 0) throw new Error(recordSheet.action === "feed_bottle" ? tx({ en: "Please enter the bottle amount", zh: "请填写奶量" }) : tx({ en: "Please enter the temperature", zh: "请填写体温" }));
           body.amount_value = amount;
         }
         if (recordSheet.action === "feed_bottle") {
           body.milk_type = milkType;
         }
         await api<EventRecord>("/api/read/events", { method: "POST", body: JSON.stringify(body) });
-        setRecordMessage(`${recordSheet.title}已记录`);
+        setRecordMessage(tx({ en: "{title} recorded", zh: "{title}已记录" }, { title: recordSheet.title }));
         setRecordSheet(null);
         await load();
       } catch (err) {
         if (isUnauthorized(err)) return onUnauthorized();
-        setRecordError(err instanceof Error ? err.message : "记录失败");
+        setRecordError(err instanceof Error ? err.message : tx({ en: "Failed to record", zh: "记录失败" }));
       } finally {
         setRecordBusyType(null);
       }
@@ -162,15 +163,15 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
     setRecordSheet(null);
   }, []);
 
-  if (loading) return <div className="loading">正在加载Baby Status...</div>;
+  if (loading) return <div className="loading">{tx({ en: "Loading Baby Status...", zh: "正在加载Baby Status..." })}</div>;
   if (error || !data) {
     return (
       <main className="app-main">
         <section className="panel">
           <h1>Baby Status</h1>
-          <p className="error-text">{error || "加载失败"}</p>
+          <p className="error-text">{error || tx({ en: "Failed to load", zh: "加载失败" })}</p>
           <button className="primary" type="button" onClick={() => void load()}>
-            重试
+            {tx({ en: "Retry", zh: "重试" })}
           </button>
         </section>
       </main>
@@ -179,7 +180,6 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
 
   return (
     <main className="app-main read-only-main">
-      <LanguageToggle />
       <DailyRecordOverview
         profile={data.profile}
         title={data.profile.child_name || data.title}
@@ -194,13 +194,13 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
         busyType={recordBusyType}
         onQuickAction={openRecordSheet}
         quickActions={FAMILY_QUICK_ACTIONS}
-        quickTitle="帮忙记录"
+        quickTitle={tx({ en: "Help record", zh: "帮忙记录" })}
         quickMessage={recordMessage}
         visibleSections={readOnlyOverviewSectionsForTab(activeTab)}
         onCardSelect={setSelectedCard}
       />
 
-      <nav className="read-tabbar" aria-label="只读页分区">
+      <nav className="read-tabbar" aria-label={tx({ en: "Read-only sections", zh: "只读页分区" })}>
         {READ_ONLY_TABS.map((tab) => (
           <button key={tab.key} type="button" className={activeTab === tab.key ? "active" : ""} aria-current={activeTab === tab.key ? "page" : undefined} onClick={() => selectTab(tab.key)}>
             {tab.label}
@@ -212,7 +212,7 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
         <Sheet title={recordSheet.title} onClose={() => setRecordSheet(null)}>
           <form className="stack family-record-form" onSubmit={submitRecord}>
             <div className="field-block">
-              <span className="field-label">时间</span>
+              <span className="field-label">{tx({ en: "Time", zh: "时间" })}</span>
               <div className="choice-grid time-choice-grid">
                 {TIME_OPTIONS.map((option) => (
                   <button
@@ -224,13 +224,13 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
                       setOffsetMinutes(option.minutes);
                     }}
                   >
-                    {option.label}
+                    {tx(option.label)}
                   </button>
                 ))}
               </div>
             </div>
             <label>
-              其他时间
+              {tx({ en: "Other time", zh: "其他时间" })}
               <input
                 type="datetime-local"
                 value={customTime}
@@ -242,15 +242,15 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
             </label>
             {recordSheet.action === "feed_bottle" ? (
               <div className="field-block">
-                <span className="field-label">奶类型</span>
+                <span className="field-label">{tx({ en: "Milk type", zh: "奶类型" })}</span>
                 <div className="choice-grid">
                   {MILK_TYPE_OPTIONS.map((option) => (
                     <button key={option.value} type="button" className={milkType === option.value ? "choice active" : "choice"} onClick={() => setMilkType(option.value)}>
-                      {option.label}
+                      {tx(option.label)}
                     </button>
                   ))}
                 </div>
-                <span className="field-label">奶量 ml</span>
+                <span className="field-label">{tx({ en: "Bottle amount ml", zh: "奶量 ml" })}</span>
                 <div className="choice-grid">
                   {BOTTLE_AMOUNTS.map((value) => (
                     <button key={value} type="button" className={amountValue === value ? "choice active" : "choice"} onClick={() => setAmountValue(value)}>
@@ -258,12 +258,12 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
                     </button>
                   ))}
                 </div>
-                <input aria-label="奶量 ml" type="number" min="1" step="1" inputMode="decimal" value={amountValue} onChange={(event) => setAmountValue(event.target.value)} required />
+                <input aria-label={tx({ en: "Bottle amount ml", zh: "奶量 ml" })} type="number" min="1" step="1" inputMode="decimal" value={amountValue} onChange={(event) => setAmountValue(event.target.value)} required />
               </div>
             ) : null}
             {recordSheet.action === "temperature" ? (
               <div className="field-block">
-                <span className="field-label">额温 °C</span>
+                <span className="field-label">{tx({ en: "Forehead temp °C", zh: "额温 °C" })}</span>
                 <div className="choice-grid">
                   {TEMPERATURE_VALUES.map((value) => (
                     <button key={value} type="button" className={amountValue === value ? "choice active" : "choice"} onClick={() => setAmountValue(value)}>
@@ -271,16 +271,16 @@ export function ReadOnlyPage({ onLogout, onUnauthorized }: ReadOnlyPageProps) {
                     </button>
                   ))}
                 </div>
-                <input aria-label="额温 °C" type="number" min="30" max="45" step="0.1" inputMode="decimal" value={amountValue} onChange={(event) => setAmountValue(event.target.value)} required />
+                <input aria-label={tx({ en: "Forehead temp °C", zh: "额温 °C" })} type="number" min="30" max="45" step="0.1" inputMode="decimal" value={amountValue} onChange={(event) => setAmountValue(event.target.value)} required />
               </div>
             ) : null}
             {recordError ? <p className="error-text">{recordError}</p> : null}
             <div className="sheet-actions">
               <button className="ghost" type="button" onClick={() => setRecordSheet(null)}>
-                取消
+                {tx({ en: "Cancel", zh: "取消" })}
               </button>
               <button className="primary" type="submit" disabled={recordBusyType !== null}>
-                记录
+                {tx({ en: "Record", zh: "记录" })}
               </button>
             </div>
           </form>
@@ -309,12 +309,12 @@ function quickTypeToReadAction(type: QuickRecordType, hasOpenSleep: boolean): Re
 }
 
 function readActionTitle(action: ReadRecordAction): string {
-  if (action === "feed_bottle") return "记录奶瓶";
-  if (action === "diaper_pee") return "记录小便";
-  if (action === "diaper_poop") return "记录大便";
-  if (action === "temperature") return "记录额温";
-  if (action === "sleep_end") return "记录睡醒";
-  return "记录睡着";
+  if (action === "feed_bottle") return localizedText({ en: "Record bottle", zh: "记录奶瓶" });
+  if (action === "diaper_pee") return localizedText({ en: "Record pee", zh: "记录小便" });
+  if (action === "diaper_poop") return localizedText({ en: "Record poop", zh: "记录大便" });
+  if (action === "temperature") return localizedText({ en: "Record forehead temp", zh: "记录额温" });
+  if (action === "sleep_end") return localizedText({ en: "Record wake-up", zh: "记录睡醒" });
+  return localizedText({ en: "Record asleep", zh: "记录睡着" });
 }
 
 function defaultAmountValue(action: ReadRecordAction): string {

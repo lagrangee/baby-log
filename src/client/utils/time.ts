@@ -1,5 +1,5 @@
 import type { AppProfile } from "../types";
-import { getCurrentLanguage } from "../i18n";
+import { getCurrentLanguage, localizedText } from "../i18n";
 
 export function nowIso(): string {
   return new Date().toISOString().replace(".000Z", "Z");
@@ -65,13 +65,13 @@ export function formatRelativeTime(iso: string | null | undefined, timezone: str
   if (!iso) return "—";
   const then = new Date(iso);
   const minutes = Math.max(0, Math.floor((now.getTime() - then.getTime()) / 60000));
-  if (minutes < 1) return getCurrentLanguage() === "zh" ? "刚刚" : "just now";
-  if (minutes < 60) return getCurrentLanguage() === "zh" ? `${minutes} 分钟前` : `${minutes} min ago`;
-  if (minutes < 6 * 60) return getCurrentLanguage() === "zh" ? `${Math.floor(minutes / 60)} 小时前` : `${Math.floor(minutes / 60)} hr ago`;
+  if (minutes < 1) return localizedText({ en: "just now", zh: "刚刚" });
+  if (minutes < 60) return localizedText({ en: "{minutes} min ago", zh: "{minutes} 分钟前" }, { minutes });
+  if (minutes < 6 * 60) return localizedText({ en: "{hours} hr ago", zh: "{hours} 小时前" }, { hours: Math.floor(minutes / 60) });
   const today = localDateInTimezone(now, timezone);
   const date = localDateInTimezone(then, timezone);
-  if (date === today) return getCurrentLanguage() === "zh" ? `今天 ${formatTime(iso, timezone)}` : `Today ${formatTime(iso, timezone)}`;
-  if (date === addDateDays(today, -1)) return getCurrentLanguage() === "zh" ? `昨天 ${formatTime(iso, timezone)}` : `Yesterday ${formatTime(iso, timezone)}`;
+  if (date === today) return localizedText({ en: "Today {time}", zh: "今天 {time}" }, { time: formatTime(iso, timezone) });
+  if (date === addDateDays(today, -1)) return localizedText({ en: "Yesterday {time}", zh: "昨天 {time}" }, { time: formatTime(iso, timezone) });
   return `${date} ${formatTime(iso, timezone)}`;
 }
 
@@ -89,33 +89,35 @@ export function minutesBetween(startIso: string, endIso: string): number {
 
 export function formatDuration(minutes: number | null | undefined): string {
   if (minutes == null || Number.isNaN(minutes)) return "—";
-  if (minutes < 60) return getCurrentLanguage() === "zh" ? `${minutes} 分钟` : `${minutes} min`;
+  if (minutes < 60) return localizedText({ en: "{minutes} min", zh: "{minutes} 分钟" }, { minutes });
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
-  if (getCurrentLanguage() === "zh") return rest ? `${hours} 小时 ${rest} 分钟` : `${hours} 小时`;
-  return rest ? `${hours} hr ${rest} min` : `${hours} hr`;
+  return rest
+    ? localizedText({ en: "{hours} hr {minutes} min", zh: "{hours} 小时 {minutes} 分钟" }, { hours, minutes: rest })
+    : localizedText({ en: "{hours} hr", zh: "{hours} 小时" }, { hours });
 }
 
 export function formatElapsedTime(minutes: number): string {
-  if (minutes < 60) return getCurrentLanguage() === "zh" ? `${minutes} 分钟` : `${minutes} min`;
+  if (minutes < 60) return localizedText({ en: "{minutes} min", zh: "{minutes} 分钟" }, { minutes });
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
-  if (getCurrentLanguage() === "zh") return rest ? `${hours} 小时 ${rest} 分钟` : `${hours} 小时`;
-  return rest ? `${hours} hr ${rest} min` : `${hours} hr`;
+  return rest
+    ? localizedText({ en: "{hours} hr {minutes} min", zh: "{hours} 小时 {minutes} 分钟" }, { hours, minutes: rest })
+    : localizedText({ en: "{hours} hr", zh: "{hours} 小时" }, { hours });
 }
 
 export function stageText(profile: Pick<AppProfile, "phase" | "due_date" | "child_birth_date" | "timezone">): string {
   const today = localDateInTimezone(new Date(), profile.timezone);
   if (profile.phase === "pregnancy_prebirth" || !profile.child_birth_date) {
-    if (!profile.due_date) return getCurrentLanguage() === "zh" ? "出生前 · 未设置预产期" : "Before birth · due date not set";
+    if (!profile.due_date) return localizedText({ en: "Before birth · due date not set", zh: "出生前 · 未设置预产期" });
     const days = diffLocalDates(today, profile.due_date);
-    if (days >= 0) return getCurrentLanguage() === "zh" ? `出生前 · 距预产期 ${days} 天` : `Before birth · ${days} days to due date`;
-    return getCurrentLanguage() === "zh" ? `出生前 · 预产期已过 ${Math.abs(days)} 天` : `Before birth · ${Math.abs(days)} days past due date`;
+    if (days >= 0) return localizedText({ en: "Before birth · {days} days to due date", zh: "出生前 · 距预产期 {days} 天" }, { days });
+    return localizedText({ en: "Before birth · {days} days past due date", zh: "出生前 · 预产期已过 {days} 天" }, { days: Math.abs(days) });
   }
 
   const ageDays = Math.max(1, diffLocalDates(profile.child_birth_date, today) + 1);
   const monthAge = Math.max(0, fullMonthDiff(profile.child_birth_date, today));
-  return getCurrentLanguage() === "zh" ? `出生第 ${ageDays} 天 / ${monthAge} 月龄` : `Day ${ageDays} / ${monthAge} months old`;
+  return localizedText({ en: "Day {days} / {months} months old", zh: "出生第 {days} 天 / {months} 月龄" }, { days: ageDays, months: monthAge });
 }
 
 function locale(): string {

@@ -1,5 +1,6 @@
 import { Sheet } from "./Sheet";
 import type { FormEvent } from "react";
+import { localizedText, useI18n } from "../i18n";
 import type { EventRecord, JsonRecord } from "../types";
 import { EVENT_LABELS } from "../utils/format";
 import { localInputValueInTimezone, toIsoFromLocalInputInTimezone } from "../utils/time";
@@ -13,30 +14,32 @@ interface EventEditSheetProps {
 }
 
 export function EventEditSheet({ event, timezone, error, onClose, onSubmit }: EventEditSheetProps) {
+  const { text: tx } = useI18n();
+
   async function submit(eventSubmit: FormEvent<HTMLFormElement>) {
     eventSubmit.preventDefault();
     await onSubmit(editPayload(event, new FormData(eventSubmit.currentTarget), timezone));
   }
 
   return (
-    <Sheet title={`编辑${EVENT_LABELS[event.event_type]}`} onClose={onClose}>
+    <Sheet title={tx({ en: "Edit {label}", zh: "编辑{label}" }, { label: EVENT_LABELS[event.event_type] })} onClose={onClose}>
       <form className="stack" onSubmit={(formEvent) => void submit(formEvent)}>
         <label>
-          时间
+          {tx({ en: "Time", zh: "时间" })}
           <input name="occurred_at" type="datetime-local" defaultValue={localInputValueInTimezone(event.occurred_at, timezone)} required />
         </label>
         <EditFields event={event} timezone={timezone} />
         <details>
-          <summary>高级 JSON</summary>
+          <summary>{tx({ en: "Advanced JSON", zh: "高级 JSON" })}</summary>
           <textarea name="details_json_advanced" defaultValue={JSON.stringify(event.details_json ?? {}, null, 2)} />
         </details>
         {error ? <p className="error-text">{error}</p> : null}
         <div className="sheet-actions">
           <button className="ghost" type="button" onClick={onClose}>
-            取消
+            {tx({ en: "Cancel", zh: "取消" })}
           </button>
           <button className="primary" type="submit">
-            保存
+            {tx({ en: "Save", zh: "保存" })}
           </button>
         </div>
       </form>
@@ -50,13 +53,13 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "feed_breast") {
     return (
       <>
-        <label>记录模式<Select name="session_mode" value={breastSessionMode(event)} options={[["timed", "计时亲喂"], ["count_only", "快速记一次"]]} /></label>
-        <label>结束时间<input name="ended_at" type="datetime-local" defaultValue={endInput} /></label>
-        <label>持续分钟<input name="duration_min" type="number" min="1" max="240" step="1" defaultValue={numberDetail(details.duration_min)} /></label>
-        <label>侧别<Select name="side" value={stringDetail(details.side)} options={[["", "未填"], ["left", "左侧"], ["right", "右侧"], ["both", "双侧"], ["unknown", "未知"]]} /></label>
-        <label>有效吸吮<Select name="effective_suck" value={stringDetail(details.effective_suck)} options={[["", "未填"], ["yes", "是"], ["no", "否"], ["unknown", "未知"]]} /></label>
-        <label>喂后状态<Select name="baby_state_after" value={stringDetail(details.baby_state_after)} options={[["", "未填"], ["satisfied", "满足"], ["sleepy", "困了"], ["still_hungry", "仍像没吃够"], ["unknown", "未知"]]} /></label>
-        <label>吐奶<Select name="spit_up" value={stringDetail(details.spit_up)} options={[["", "未填"], ["none", "无"], ["small", "少量"], ["large", "较多"], ["unknown", "未知"]]} /></label>
+        <label>{localizedText({ en: "Record mode", zh: "记录模式" })}<Select name="session_mode" value={breastSessionMode(event)} options={[["timed", localizedText({ en: "Timed breastfeed", zh: "计时亲喂" })], ["count_only", localizedText({ en: "Quick count", zh: "快速记一次" })]]} /></label>
+        <label>{localizedText({ en: "End time", zh: "结束时间" })}<input name="ended_at" type="datetime-local" defaultValue={endInput} /></label>
+        <label>{localizedText({ en: "Duration minutes", zh: "持续分钟" })}<input name="duration_min" type="number" min="1" max="240" step="1" defaultValue={numberDetail(details.duration_min)} /></label>
+        <label>{localizedText({ en: "Side", zh: "侧别" })}<Select name="side" value={stringDetail(details.side)} options={emptyOption([["left", { en: "left", zh: "左侧" }], ["right", { en: "right", zh: "右侧" }], ["both", { en: "both", zh: "双侧" }], ["unknown", { en: "unknown", zh: "未知" }]])} /></label>
+        <label>{localizedText({ en: "Effective suck", zh: "有效吸吮" })}<Select name="effective_suck" value={stringDetail(details.effective_suck)} options={emptyOption([["yes", { en: "yes", zh: "是" }], ["no", { en: "no", zh: "否" }], ["unknown", { en: "unknown", zh: "未知" }]])} /></label>
+        <label>{localizedText({ en: "State after feeding", zh: "喂后状态" })}<Select name="baby_state_after" value={stringDetail(details.baby_state_after)} options={emptyOption([["satisfied", { en: "satisfied", zh: "满足" }], ["sleepy", { en: "sleepy", zh: "困了" }], ["still_hungry", { en: "still hungry", zh: "仍像没吃够" }], ["unknown", { en: "unknown", zh: "未知" }]])} /></label>
+        <label>{localizedText({ en: "Spit-up", zh: "吐奶" })}<Select name="spit_up" value={stringDetail(details.spit_up)} options={emptyOption([["none", { en: "none", zh: "无" }], ["small", { en: "small", zh: "少量" }], ["large", { en: "large", zh: "较多" }], ["unknown", { en: "unknown", zh: "未知" }]])} /></label>
         <NoteField event={event} />
       </>
     );
@@ -64,8 +67,8 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "feed_bottle") {
     return (
       <>
-        <label>奶量 ml<input name="amount_value" type="number" min="1" step="1" defaultValue={event.amount_value ?? ""} required /></label>
-        <label>奶类型<Select name="milk_type" value={stringDetail(details.milk_type)} options={[["", "未填"], ["formula", "配方"], ["breastmilk", "母乳瓶喂"], ["mixed", "混合"], ["other", "其他"]]} /></label>
+        <label>{localizedText({ en: "Bottle amount ml", zh: "奶量 ml" })}<input name="amount_value" type="number" min="1" step="1" defaultValue={event.amount_value ?? ""} required /></label>
+        <label>{localizedText({ en: "Milk type", zh: "奶类型" })}<Select name="milk_type" value={stringDetail(details.milk_type)} options={emptyOption([["formula", { en: "formula", zh: "配方" }], ["breastmilk", { en: "expressed milk", zh: "母乳瓶喂" }], ["mixed", { en: "mixed", zh: "混合" }], ["other", { en: "other", zh: "其他" }]])} /></label>
         <NoteField event={event} />
       </>
     );
@@ -73,8 +76,8 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "diaper_poop") {
     return (
       <>
-        <label>颜色<Select name="color" value={stringDetail(details.color)} options={[["", "未填"], ["black_tar", "黑色柏油样"], ["green", "绿色"], ["yellow", "黄色"], ["brown", "棕色"], ["red", "红色"], ["white", "白色"], ["other", "其他"]]} /></label>
-        <label>性状<Select name="texture" value={stringDetail(details.texture)} options={[["", "未填"], ["watery", "水样"], ["loose", "稀"], ["seedy", "颗粒"], ["pasty", "糊状"], ["hard", "硬"], ["mucus", "黏液"], ["other", "其他"]]} /></label>
+        <label>{localizedText({ en: "Color", zh: "颜色" })}<Select name="color" value={stringDetail(details.color)} options={emptyOption([["black_tar", { en: "black/tarry", zh: "黑色柏油样" }], ["green", { en: "green", zh: "绿色" }], ["yellow", { en: "yellow", zh: "黄色" }], ["brown", { en: "brown", zh: "棕色" }], ["red", { en: "red", zh: "红色" }], ["white", { en: "white", zh: "白色" }], ["other", { en: "other", zh: "其他" }]])} /></label>
+        <label>{localizedText({ en: "Texture", zh: "性状" })}<Select name="texture" value={stringDetail(details.texture)} options={emptyOption([["watery", { en: "watery", zh: "水样" }], ["loose", { en: "loose", zh: "稀" }], ["seedy", { en: "seedy", zh: "颗粒" }], ["pasty", { en: "pasty", zh: "糊状" }], ["hard", { en: "hard", zh: "硬" }], ["mucus", { en: "mucus", zh: "黏液" }], ["other", { en: "other", zh: "其他" }]])} /></label>
         <NoteField event={event} />
       </>
     );
@@ -82,8 +85,8 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "temperature") {
     return (
       <>
-        <label>体温 °C<input name="amount_value" type="number" min="30" max="45" step="0.1" defaultValue={event.amount_value ?? ""} required /></label>
-        <label>测量方式<Select name="method" value={stringDetail(details.method)} options={[["", "未填"], ["rectal", "肛温"], ["ear", "耳温"], ["forehead", "额温"], ["armpit", "腋温"], ["oral", "口温"], ["other", "其他"]]} /></label>
+        <label>{localizedText({ en: "Temperature °C", zh: "体温 °C" })}<input name="amount_value" type="number" min="30" max="45" step="0.1" defaultValue={event.amount_value ?? ""} required /></label>
+        <label>{localizedText({ en: "Method", zh: "测量方式" })}<Select name="method" value={stringDetail(details.method)} options={emptyOption([["rectal", { en: "rectal", zh: "肛温" }], ["ear", { en: "ear", zh: "耳温" }], ["forehead", { en: "forehead", zh: "额温" }], ["armpit", { en: "armpit", zh: "腋温" }], ["oral", { en: "oral", zh: "口温" }], ["other", { en: "other", zh: "其他" }]])} /></label>
         <NoteField event={event} />
       </>
     );
@@ -91,7 +94,7 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "sleep_session" || event.event_type === "tummy_time") {
     return (
       <>
-        <label>结束时间<input name="ended_at" type="datetime-local" defaultValue={endInput} /></label>
+        <label>{localizedText({ en: "End time", zh: "结束时间" })}<input name="ended_at" type="datetime-local" defaultValue={endInput} /></label>
         <NoteField event={event} />
       </>
     );
@@ -99,8 +102,8 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "growth_measurement") {
     return (
       <>
-        <label>类型<Select name="measure_type" value={stringDetail(details.measure_type)} options={[["weight_kg", "体重 kg"], ["length_cm", "身长 cm"], ["head_circumference_cm", "头围 cm"]]} /></label>
-        <label>数值<input name="amount_value" type="number" step="0.001" defaultValue={event.amount_value ?? ""} required /></label>
+        <label>{localizedText({ en: "Type", zh: "类型" })}<Select name="measure_type" value={stringDetail(details.measure_type)} options={[["weight_kg", localizedText({ en: "Weight kg", zh: "体重 kg" })], ["length_cm", localizedText({ en: "Length cm", zh: "身长 cm" })], ["head_circumference_cm", localizedText({ en: "Head circumference cm", zh: "头围 cm" })]]} /></label>
+        <label>{localizedText({ en: "Value", zh: "数值" })}<input name="amount_value" type="number" step="0.001" defaultValue={event.amount_value ?? ""} required /></label>
         <NoteField event={event} />
       </>
     );
@@ -108,8 +111,8 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "symptom") {
     return (
       <>
-        <label>标签<input name="symptom_tags" defaultValue={Array.isArray(details.symptom_tags) ? details.symptom_tags.join("、") : ""} /></label>
-        <label>严重程度<Select name="severity" value={stringDetail(details.severity)} options={[["", "未填"], ["mild", "轻微"], ["moderate", "中等"], ["severe", "较重"], ["unknown", "未知"]]} /></label>
+        <label>{localizedText({ en: "Tags", zh: "标签" })}<input name="symptom_tags" defaultValue={Array.isArray(details.symptom_tags) ? details.symptom_tags.join(localizedText({ en: ", ", zh: "、" })) : ""} /></label>
+        <label>{localizedText({ en: "Severity", zh: "严重程度" })}<Select name="severity" value={stringDetail(details.severity)} options={emptyOption([["mild", { en: "mild", zh: "轻微" }], ["moderate", { en: "moderate", zh: "中等" }], ["severe", { en: "severe", zh: "较重" }], ["unknown", { en: "unknown", zh: "未知" }]])} /></label>
         <NoteField event={event} />
       </>
     );
@@ -117,10 +120,10 @@ function EditFields({ event, timezone }: { event: EventRecord; timezone: string 
   if (event.event_type === "medicine") {
     return (
       <>
-        <label>药名<input name="name" defaultValue={stringDetail(details.name)} /></label>
-        <label>剂量<input name="dose" defaultValue={stringDetail(details.dose)} /></label>
-        <label>途径<Select name="route" value={stringDetail(details.route)} options={[["", "未填"], ["oral", "口服"], ["nasal", "鼻用"], ["topical", "外用"], ["rectal", "直肠"], ["other", "其他"]]} /></label>
-        <label>原因<input name="reason" defaultValue={stringDetail(details.reason)} /></label>
+        <label>{localizedText({ en: "Medicine name", zh: "药名" })}<input name="name" defaultValue={stringDetail(details.name)} /></label>
+        <label>{localizedText({ en: "Dose", zh: "剂量" })}<input name="dose" defaultValue={stringDetail(details.dose)} /></label>
+        <label>{localizedText({ en: "Route", zh: "途径" })}<Select name="route" value={stringDetail(details.route)} options={emptyOption([["oral", { en: "oral", zh: "口服" }], ["nasal", { en: "nasal", zh: "鼻用" }], ["topical", { en: "topical", zh: "外用" }], ["rectal", { en: "rectal", zh: "直肠" }], ["other", { en: "other", zh: "其他" }]])} /></label>
+        <label>{localizedText({ en: "Reason", zh: "原因" })}<input name="reason" defaultValue={stringDetail(details.reason)} /></label>
         <NoteField event={event} />
       </>
     );
@@ -141,7 +144,7 @@ function Select({ name, value, options }: { name: string; value: string; options
 function NoteField({ event, required = false }: { event: EventRecord; required?: boolean }) {
   return (
     <label>
-      备注
+      {localizedText({ en: "Note", zh: "备注" })}
       <textarea name="note" defaultValue={event.note ?? ""} required={required} />
     </label>
   );
@@ -201,19 +204,19 @@ function parseAdvancedDetails(formData: FormData): JsonRecord {
   const raw = text(formData, "details_json_advanced");
   if (!raw) return {};
   const parsed = JSON.parse(raw) as unknown;
-  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("高级 JSON 必须是对象");
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error(localizedText({ en: "Advanced JSON must be an object", zh: "高级 JSON 必须是对象" }));
   return { ...(parsed as JsonRecord) };
 }
 
 function requiredText(formData: FormData, key: string): string {
   const value = text(formData, key);
-  if (!value) throw new Error("请填写必填字段");
+  if (!value) throw new Error(localizedText({ en: "Please fill in the required field", zh: "请填写必填字段" }));
   return value;
 }
 
 function requiredNumber(formData: FormData, key: string): number {
   const value = Number(requiredText(formData, key));
-  if (!Number.isFinite(value) || value <= 0) throw new Error("请填写有效数值");
+  if (!Number.isFinite(value) || value <= 0) throw new Error(localizedText({ en: "Please enter a valid number", zh: "请填写有效数值" }));
   return value;
 }
 
@@ -234,12 +237,16 @@ function setIfNumber(target: JsonRecord, key: string, value: FormDataEntryValue 
     return;
   }
   const next = Number(raw);
-  if (!Number.isFinite(next) || next <= 0) throw new Error("持续分钟需要大于 0");
+  if (!Number.isFinite(next) || next <= 0) throw new Error(localizedText({ en: "Duration minutes must be greater than 0", zh: "持续分钟需要大于 0" }));
   target[key] = next;
 }
 
 function stringDetail(value: unknown): string {
   return typeof value === "string" ? value : "";
+}
+
+function emptyOption(options: Array<[string, Record<"en" | "zh", string>]>): Array<[string, string]> {
+  return [["", localizedText({ en: "Not set", zh: "未填" })], ...options.map(([value, label]) => [value, localizedText(label)] as [string, string])];
 }
 
 function numberDetail(value: unknown): string {

@@ -164,6 +164,16 @@ h3 {
   color: #ffffff;
 }
 
+.language-settings-panel .section-head {
+  align-items: center;
+}
+
+.language-settings-panel .language-toggle {
+  position: static;
+  flex: 0 0 auto;
+  box-shadow: none;
+}
+
 .read-only-main {
   padding-bottom: 5.6rem;
 }
@@ -1045,6 +1055,82 @@ h3 {
   color: var(--muted);
 }
 
+.timeline-trend-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.trend-card {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.trend-card-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.trend-card-head > small {
+  margin-top: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.trend-daily-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  overscroll-behavior-x: contain;
+}
+
+.trend-daily-strip {
+  min-width: max-content;
+  height: 122px;
+  display: flex;
+  align-items: stretch;
+  gap: 0.34rem;
+}
+
+.trend-day-point {
+  width: 34px;
+  display: grid;
+  grid-template-rows: 18px 1fr 18px;
+  align-items: end;
+  gap: 0.22rem;
+}
+
+.trend-card .trend-day-value,
+.trend-card .trend-day-date {
+  display: block;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trend-day-track {
+  min-height: 72px;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+
+.trend-card .trend-day-fill {
+  width: 76%;
+  display: block;
+  min-height: 0;
+  border-radius: 7px 7px 3px 3px;
+  background: #4f6398;
+}
+
+.trend-card .trend-day-fill.empty {
+  height: 0;
+  background: transparent;
+}
+
 .trend-chart-grid {
   display: grid;
   gap: 0.78rem;
@@ -1476,7 +1562,7 @@ textarea {
   left: 0;
   z-index: 20;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   border-top: 1px solid var(--line);
   background: rgb(255 255 255 / 0.96);
   box-shadow: 0 -6px 24px rgb(31 42 46 / 0.08);
@@ -1490,10 +1576,12 @@ textarea {
   padding: 0.72rem 0.25rem;
   border-top: 3px solid transparent;
   color: #59686c;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 680;
+  line-height: 1.15;
   text-align: center;
   text-decoration: none;
+  word-break: keep-all;
 }
 
 .tabs a.active {

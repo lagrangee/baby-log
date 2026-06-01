@@ -4,6 +4,7 @@ import { QuickRecordGrid, type QuickRecordAction, type QuickRecordType } from ".
 import { RecentEvents } from "./RecentEvents";
 import { TodaySummaryCards, type TodaySummaryCardSlot } from "./TodaySummaryCards";
 import type { AppProfile, DisplayEventRecord, EventRecord, GrowthCurvePayload, ReferenceTargetItem, TodaySummary } from "../types";
+import { localizedText, useI18n } from "../i18n";
 import { formatNumber } from "../utils/format";
 import { formatDateInTimezone, stageText } from "../utils/time";
 
@@ -60,6 +61,7 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
   onEditEvent,
   onDeleteEvent
 }: DailyRecordOverviewProps<TEvent>) {
+  const { text: tx } = useI18n();
   const timezone = profile.timezone;
   const quickActionsEnabled = Boolean(onQuickAction);
   const eventsEditable = Boolean(onEditEvent || onDeleteEvent);
@@ -74,7 +76,7 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
           <p>{stageText(profile)}</p>
         </div>
         <button className="ghost small" type="button" onClick={onLogout}>
-          退出
+          {tx({ en: "Log out", zh: "退出" })}
         </button>
       </header>
 
@@ -84,9 +86,9 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
           <ActiveSessionCard
             session={openBreast}
             timezone={timezone}
-            title="亲喂进行中"
-            elapsedLabel="已"
-            actionLabel="结束亲喂"
+            title={tx({ en: "Breastfeeding", zh: "亲喂进行中" })}
+            elapsedLabel={tx({ en: "for", zh: "已" })}
+            actionLabel={tx({ en: "End breastfeed", zh: "结束亲喂" })}
             busy={busyType === "feed_breast"}
             onWake={onBreastAction}
           />
@@ -95,7 +97,12 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
       {sectionSet.has("summaryCards") ? <TodaySummaryCards summary={todaySummary} referenceTargets={referenceTargets} timezone={timezone} onCardSelect={onCardSelect} /> : null}
       {sectionSet.has("growthCurve") && growthCurve ? <GrowthCurvePanel growthCurve={growthCurve} /> : null}
       {sectionSet.has("notice") && todaySummary.system_flags.includes("temperature_high_neutral_notice") ? (
-        <p className="notice">已记录较高体温数值，请结合医生建议处理；本站不提供诊断。</p>
+        <p className="notice">
+          {tx({
+            en: "A higher temperature value has been recorded. Use clinician advice for decisions; this app does not provide diagnosis.",
+            zh: "已记录较高体温数值，请结合医生建议处理；本站不提供诊断。"
+          })}
+        </p>
       ) : null}
       {sectionSet.has("quickRecord") && quickActionsEnabled && onQuickAction ? (
         quickTitle ? (
@@ -117,14 +124,15 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
 }
 
 function SevenDayTrendSummary({ summaries }: { summaries: TodaySummary[] }) {
+  const { text: tx } = useI18n();
   const trends = buildSevenDayTrendCharts(summaries);
   return (
     <section className="panel">
       <div className="section-head">
-        <h2>过去 7 天</h2>
-        <span>{summaries.length} 天</span>
+        <h2>{tx({ en: "Past 7 days", zh: "过去 7 天" })}</h2>
+        <span>{tx({ en: "{count} days", zh: "{count} 天" }, { count: summaries.length })}</span>
       </div>
-      <div className="trend-chart-grid" aria-label="过去 7 天趋势图">
+      <div className="trend-chart-grid" aria-label={tx({ en: "Past 7 days trend charts", zh: "过去 7 天趋势图" })}>
         {trends.charts.map((chart) => (
           <article className="trend-chart-card" key={chart.key}>
             <header>
@@ -167,7 +175,7 @@ export interface SevenDayTrendBar {
 
 interface TrendMetricDefinition {
   key: SevenDayTrendChart["key"];
-  title: string;
+  title: () => string;
   value: (summary: TodaySummary) => number | null;
   display: (value: number) => string;
   scale?: "range";
@@ -178,50 +186,50 @@ export function buildSevenDayTrendCharts(summaries: TodaySummary[]): { charts: S
   const metrics: TrendMetricDefinition[] = [
     {
       key: "feeding",
-      title: "喂养次数(次)",
+      title: () => localizedText({ en: "Feeding count (times)", zh: "喂养次数(次)" }),
       value: (summary) => summary.feed_breast_count + summary.feed_bottle_count,
       display: (value) => `${value}`
     },
     {
       key: "formula",
-      title: "配方奶(ml)",
+      title: () => localizedText({ en: "Formula (ml)", zh: "配方奶(ml)" }),
       value: (summary) => summary.bottle_formula_ml_total,
       display: (value) => formatNumber(value)
     },
     {
       key: "breastmilk",
-      title: "母乳瓶喂(ml)",
+      title: () => localizedText({ en: "Expressed milk (ml)", zh: "母乳瓶喂(ml)" }),
       value: (summary) => summary.bottle_breastmilk_ml_total,
       display: (value) => formatNumber(value)
     },
     {
       key: "pee",
-      title: "小便(次)",
+      title: () => localizedText({ en: "Pee (times)", zh: "小便(次)" }),
       value: (summary) => summary.pee_count,
       display: (value) => `${value}`
     },
     {
       key: "poop",
-      title: "大便(次)",
+      title: () => localizedText({ en: "Poop (times)", zh: "大便(次)" }),
       value: (summary) => summary.poop_count,
       display: (value) => `${value}`
     },
     {
       key: "sleep",
-      title: "睡眠时长(小时)",
+      title: () => localizedText({ en: "Sleep duration (hr)", zh: "睡眠时长(小时)" }),
       value: (summary) => summary.sleep_minutes_total,
       display: formatHoursCompact
     },
     {
       key: "weight",
-      title: "体重(g)",
+      title: () => localizedText({ en: "Weight (g)", zh: "体重(g)" }),
       value: (summary) => summary.growth.latest_weight_g,
       display: (value) => `${value}`,
       scale: "range"
     },
     {
       key: "length",
-      title: "身长(cm)",
+      title: () => localizedText({ en: "Length (cm)", zh: "身长(cm)" }),
       value: (summary) => summary.growth.latest_length_cm,
       display: (value) => formatNumber(value),
       scale: "range"
@@ -240,14 +248,14 @@ function buildTrendChart(metric: TrendMetricDefinition, summaries: TodaySummary[
   const minValue = Math.min(...numericValues);
   return {
     key: metric.key,
-    title: metric.title,
+    title: metric.title(),
     bars: summaries.map((summary, index) => {
       const value = metric.value(summary);
       const heightPercent = barHeightPercent(value, { maxValue, minValue, scale: metric.scale });
       return {
         key: summary.date,
         shortDate: formatShortTrendDate(summary.date),
-        axisLabel: index === summaries.length - 1 ? "今天" : formatShortTrendDate(summary.date),
+        axisLabel: index === summaries.length - 1 ? localizedText({ en: "Today", zh: "今天" }) : formatShortTrendDate(summary.date),
         value,
         displayValue: value == null ? "—" : metric.display(value),
         heightPercent,

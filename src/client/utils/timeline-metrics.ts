@@ -1,3 +1,4 @@
+import { localizedText, type LocalizedText } from "../i18n";
 import type { EventType } from "../types";
 
 export type TrendMetricKey =
@@ -40,29 +41,29 @@ export interface ComparisonMetricItem {
 }
 
 export const trendMetricItems: TrendMetricItem[] = [
-  { label: "喂养次数", key: "feeding_total_count", unit: "次", eventTypes: ["feed_breast", "feed_bottle"] },
-  { label: "亲喂次数", key: "breast_count", unit: "次", eventTypes: ["feed_breast"] },
-  { label: "亲喂时长", key: "breastfeeding_minutes_total", unit: "分钟", eventTypes: ["feed_breast"] },
-  { label: "奶瓶 ml", key: "bottle_ml_total", unit: "ml", eventTypes: ["feed_bottle"] },
-  { label: "小便", key: "pee_count", unit: "次", eventTypes: ["diaper_pee"] },
-  { label: "大便", key: "poop_count", unit: "次", eventTypes: ["diaper_poop"] },
-  { label: "睡眠总时长", key: "sleep_minutes_total", unit: "分钟", eventTypes: ["sleep_session"] },
-  { label: "最长睡眠", key: "longest_sleep_minutes", unit: "分钟", headline: "max", eventTypes: ["sleep_session"] },
-  { label: "最高体温", key: "temperature_max_c", unit: "°C", headline: "max", eventTypes: ["temperature"] },
-  { label: "最新体重", key: "latest_weight_g", unit: "g", headline: "max", eventTypes: ["growth_measurement"] },
-  { label: "症状次数", key: "symptom_count", unit: "次", eventTypes: ["symptom"] }
+  trendItem({ en: "Feeding count", zh: "喂养次数" }, "feeding_total_count", countUnit(), ["feed_breast", "feed_bottle"]),
+  trendItem({ en: "Breastfeed count", zh: "亲喂次数" }, "breast_count", countUnit(), ["feed_breast"]),
+  trendItem({ en: "Breastfeed duration", zh: "亲喂时长" }, "breastfeeding_minutes_total", minuteUnit(), ["feed_breast"]),
+  trendItem({ en: "Bottle ml", zh: "奶瓶 ml" }, "bottle_ml_total", "ml", ["feed_bottle"]),
+  trendItem({ en: "Pee", zh: "小便" }, "pee_count", countUnit(), ["diaper_pee"]),
+  trendItem({ en: "Poop", zh: "大便" }, "poop_count", countUnit(), ["diaper_poop"]),
+  trendItem({ en: "Sleep duration", zh: "睡眠总时长" }, "sleep_minutes_total", minuteUnit(), ["sleep_session"]),
+  trendItem({ en: "Longest sleep", zh: "最长睡眠" }, "longest_sleep_minutes", minuteUnit(), ["sleep_session"], "max"),
+  trendItem({ en: "Highest temperature", zh: "最高体温" }, "temperature_max_c", "°C", ["temperature"], "max"),
+  trendItem({ en: "Latest weight", zh: "最新体重" }, "latest_weight_g", "g", ["growth_measurement"], "max"),
+  trendItem({ en: "Symptom count", zh: "症状次数" }, "symptom_count", countUnit(), ["symptom"])
 ];
 
 export const comparisonMetricItems: ComparisonMetricItem[] = [
-  { label: "喂养次数", key: "feeding_total_count", unit: "次", eventTypes: ["feed_breast", "feed_bottle"] },
-  { label: "亲喂次数", key: "breast_count", unit: "次", eventTypes: ["feed_breast"] },
-  { label: "亲喂时长", key: "breast_minutes_total", unit: "分钟", eventTypes: ["feed_breast"] },
-  { label: "奶瓶总量", key: "bottle_ml_total", unit: "ml", eventTypes: ["feed_bottle"] },
-  { label: "湿尿布", key: "pee_count", unit: "次", eventTypes: ["diaper_pee"] },
-  { label: "大便", key: "poop_count", unit: "次", eventTypes: ["diaper_poop"] },
-  { label: "睡眠总时长", key: "sleep_minutes_total", unit: "分钟", eventTypes: ["sleep_session"] },
-  { label: "最长睡眠", key: "longest_sleep_minutes", unit: "分钟", eventTypes: ["sleep_session"] },
-  { label: "最高体温", key: "temperature_max_c", unit: "°C", eventTypes: ["temperature"] }
+  comparisonItem({ en: "Feeding count", zh: "喂养次数" }, "feeding_total_count", countUnit(), ["feed_breast", "feed_bottle"]),
+  comparisonItem({ en: "Breastfeed count", zh: "亲喂次数" }, "breast_count", countUnit(), ["feed_breast"]),
+  comparisonItem({ en: "Breastfeed duration", zh: "亲喂时长" }, "breast_minutes_total", minuteUnit(), ["feed_breast"]),
+  comparisonItem({ en: "Bottle total", zh: "奶瓶总量" }, "bottle_ml_total", "ml", ["feed_bottle"]),
+  comparisonItem({ en: "Wet diapers", zh: "湿尿布" }, "pee_count", countUnit(), ["diaper_pee"]),
+  comparisonItem({ en: "Poop", zh: "大便" }, "poop_count", countUnit(), ["diaper_poop"]),
+  comparisonItem({ en: "Sleep duration", zh: "睡眠总时长" }, "sleep_minutes_total", minuteUnit(), ["sleep_session"]),
+  comparisonItem({ en: "Longest sleep", zh: "最长睡眠" }, "longest_sleep_minutes", minuteUnit(), ["sleep_session"]),
+  comparisonItem({ en: "Highest temperature", zh: "最高体温" }, "temperature_max_c", "°C", ["temperature"])
 ];
 
 export function visibleTrendMetricItems(eventTypes: EventType[]): TrendMetricItem[] {
@@ -76,4 +77,35 @@ export function visibleComparisonMetricItems(eventTypes: EventType[]): Compariso
 function filterMetricItems<Item extends { eventTypes: EventType[] }>(items: Item[], eventTypes: EventType[]): Item[] {
   if (!eventTypes.length) return items;
   return items.filter((item) => item.eventTypes.some((type) => eventTypes.includes(type)));
+}
+
+function trendItem(label: LocalizedText, key: TrendMetricKey, unit: string, eventTypes: EventType[], headline?: "sum" | "max"): TrendMetricItem {
+  return {
+    key,
+    unit,
+    eventTypes,
+    headline,
+    get label() {
+      return localizedText(label);
+    }
+  };
+}
+
+function comparisonItem(label: LocalizedText, key: ComparisonMetricKey, unit: string, eventTypes: EventType[]): ComparisonMetricItem {
+  return {
+    key,
+    unit,
+    eventTypes,
+    get label() {
+      return localizedText(label);
+    }
+  };
+}
+
+function countUnit(): string {
+  return localizedText({ en: "times", zh: "次" });
+}
+
+function minuteUnit(): string {
+  return localizedText({ en: "min", zh: "分钟" });
 }

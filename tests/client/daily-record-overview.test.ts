@@ -50,12 +50,21 @@ describe("daily record overview trend charts", () => {
     ]);
 
     expect(result.charts.map((chart) => chart.key)).toEqual(["feeding", "formula", "breastmilk", "pee", "poop", "sleep", "weight", "length"]);
-    expect(result.charts.map((chart) => chart.title)).toEqual(["喂养次数(次)", "配方奶(ml)", "母乳瓶喂(ml)", "小便(次)", "大便(次)", "睡眠时长(小时)", "体重(g)", "身长(cm)"]);
+    expect(result.charts.map((chart) => chart.title)).toEqual([
+      "Feeding count (times)",
+      "Formula (ml)",
+      "Expressed milk (ml)",
+      "Pee (times)",
+      "Poop (times)",
+      "Sleep duration (hr)",
+      "Weight (g)",
+      "Length (cm)"
+    ]);
     expect(result.charts.find((chart) => chart.key === "formula")?.bars.map((bar) => bar.displayValue)).toEqual(["50", "0", "0"]);
     expect(result.charts.find((chart) => chart.key === "breastmilk")?.bars.map((bar) => bar.displayValue)).toEqual(["30", "0", "60"]);
     expect(result.charts.find((chart) => chart.key === "pee")?.bars.map((bar) => bar.value)).toEqual([3, 0, 4]);
     expect(result.charts.find((chart) => chart.key === "poop")?.bars.map((bar) => bar.value)).toEqual([1, 0, 2]);
-    expect(result.charts[0].bars.map((bar) => `${bar.shortDate}:${bar.axisLabel}:${bar.isToday}`)).toEqual(["5/9:5/9:false", "5/10:5/10:false", "5/11:今天:true"]);
+    expect(result.charts[0].bars.map((bar) => `${bar.shortDate}:${bar.axisLabel}:${bar.isToday}`)).toEqual(["5/9:5/9:false", "5/10:5/10:false", "5/11:Today:true"]);
     expect(result.charts[0]).not.toHaveProperty("summaryText");
     expect(result.charts[0]).not.toHaveProperty("maxText");
     expect(result.charts[0].bars.map((bar) => bar.displayValue)).toEqual(["1", "0", "2"]);

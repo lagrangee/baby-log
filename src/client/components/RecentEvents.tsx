@@ -1,4 +1,5 @@
 import type { DisplayEventRecord } from "../types";
+import { useI18n } from "../i18n";
 import { eventLabel, formatEventValue } from "../utils/format";
 import { formatTime } from "../utils/time";
 
@@ -12,13 +13,14 @@ interface RecentEventsProps<TEvent extends DisplayEventRecord> {
 }
 
 export function RecentEvents<TEvent extends DisplayEventRecord>({ events, timezone, limit = 10, editable = true, onDelete, onEdit }: RecentEventsProps<TEvent>) {
+  const { text: tx } = useI18n();
   const items = events.slice(0, limit);
 
   if (!items.length) {
     return (
       <section className="panel">
-        <h2>最近记录</h2>
-        <p className="empty">还没有记录。先从一次喂养或一次小便开始。</p>
+        <h2>{tx({ en: "Recent records", zh: "最近记录" })}</h2>
+        <p className="empty">{tx({ en: "No records yet. Start with a feeding or a pee.", zh: "还没有记录。先从一次喂养或一次小便开始。" })}</p>
       </section>
     );
   }
@@ -26,8 +28,8 @@ export function RecentEvents<TEvent extends DisplayEventRecord>({ events, timezo
   return (
     <section className="panel">
       <div className="section-head">
-        <h2>最近记录</h2>
-        <span>{items.length} 条</span>
+        <h2>{tx({ en: "Recent records", zh: "最近记录" })}</h2>
+        <span>{tx({ en: "{count} records", zh: "{count} 条" }, { count: items.length })}</span>
       </div>
       <div className="event-list">
         {items.map((event, index) => (
@@ -44,12 +46,12 @@ export function RecentEvents<TEvent extends DisplayEventRecord>({ events, timezo
               <div className="row-actions compact">
                 {onEdit ? (
                   <button className="secondary small" type="button" onClick={() => onEdit(event)}>
-                    编辑
+                    {tx({ en: "Edit", zh: "编辑" })}
                   </button>
                 ) : null}
                 {onDelete ? (
                   <button className="danger small" type="button" onClick={() => onDelete(event)}>
-                    删除
+                    {tx({ en: "Delete", zh: "删除" })}
                   </button>
                 ) : null}
               </div>

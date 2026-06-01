@@ -1,27 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { normalizeLanguage, type Language } from "../shared/i18n";
 
-export type Language = "en" | "zh";
+export type { Language };
+export type LocalizedText = Record<Language, string>;
 
 const LANGUAGE_STORAGE_KEY = "baby-log-language";
 
-type TranslationKey =
-  | "app.loading"
-  | "api.requestFailed"
-  | "language.label"
-  | "language.english"
-  | "language.chinese"
-  | "login.admin"
-  | "login.read"
-  | "login.password"
-  | "login.submit"
-  | "login.failed"
-  | "nav.record"
-  | "nav.yesterday"
-  | "nav.timeline"
-  | "nav.checklist"
-  | "nav.more";
+type TranslationParams = Record<string, string | number | null | undefined>;
 
-const translations: Record<TranslationKey, Record<Language, string>> = {
+const translations = {
   "app.loading": { en: "Opening the log...", zh: "正在打开记录台..." },
   "api.requestFailed": { en: "Request failed", zh: "请求失败" },
   "language.label": { en: "Language", zh: "语言" },
@@ -34,10 +21,13 @@ const translations: Record<TranslationKey, Record<Language, string>> = {
   "login.failed": { en: "Login failed", zh: "登录失败" },
   "nav.record": { en: "Record", zh: "记录" },
   "nav.yesterday": { en: "Yesterday", zh: "昨日" },
+  "nav.growth": { en: "Growth", zh: "成长曲线" },
   "nav.timeline": { en: "Timeline", zh: "时间线" },
   "nav.checklist": { en: "Checklist", zh: "清单" },
   "nav.more": { en: "More", zh: "更多" }
-};
+} as const satisfies Record<string, LocalizedText>;
+
+export type TranslationKey = keyof typeof translations;
 
 const LanguageContext = createContext<{
   language: Language;
@@ -49,13 +39,20 @@ const LanguageContext = createContext<{
 
 export function getCurrentLanguage(): Language {
   if (typeof window === "undefined") return "en";
-  const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (stored === "en" || stored === "zh") return stored;
-  return window.navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+  const browserLanguage = window.navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+  return normalizeLanguage(window.localStorage.getItem(LANGUAGE_STORAGE_KEY), browserLanguage);
 }
 
-export function t(key: TranslationKey, language = getCurrentLanguage()): string {
-  return translations[key][language];
+export function t(key: TranslationKey, params?: TranslationParams, language = getCurrentLanguage()): string {
+  return interpolate(translations[key][language], params);
+}
+
+export function localizedText(value: LocalizedText, params?: TranslationParams, language = getCurrentLanguage()): string {
+  return interpolate(value[language], params);
+}
+
+export function languageQuery(language = getCurrentLanguage()): string {
+  return `lang=${language}`;
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -76,10 +73,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useI18n() {
   const context = useContext(LanguageContext);
-  return {
+  return useMemo(() => ({
     ...context,
-    t: (key: TranslationKey) => t(key, context.language)
-  };
+    t: (key: TranslationKey, params?: TranslationParams) => t(key, params, context.language),
+    text: (value: LocalizedText, params?: TranslationParams) => localizedText(value, params, context.language)
+  }), [context]);
 }
 
 export function LanguageToggle() {
@@ -94,4 +92,8 @@ export function LanguageToggle() {
       </button>
     </div>
   );
+}
+
+function interpolate(value: string, params: TranslationParams = {}): string {
+  return value.replace(/\{(\w+)\}/g, (_match, key: string) => String(params[key] ?? ""));
 }

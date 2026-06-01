@@ -3,6 +3,7 @@ import { useI18n } from "../i18n";
 const tabs = [
   { path: "/app", labelKey: "nav.record" },
   { path: "/app/yesterday", labelKey: "nav.yesterday" },
+  { path: "/app/growth", labelKey: "nav.growth" },
   { path: "/app/timeline", labelKey: "nav.timeline" },
   { path: "/app/checklist", labelKey: "nav.checklist" },
   { path: "/app/more", labelKey: "nav.more" }

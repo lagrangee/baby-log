@@ -12,5 +12,6 @@ paths = [
   '''src/server/data/reference-targets\.json''',
   '''src/server/data/checklist-templates\.json''',
   '''src/client/utils/reference-targets\.ts''',
+  '''tests/server/checklist-i18n\.test\.ts''',
   '''tests/server/checklists-machine-export\.test\.ts'''
 ]
