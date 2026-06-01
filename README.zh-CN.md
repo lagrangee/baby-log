@@ -93,6 +93,16 @@ cp .env.example .env
 npm run cf:deploy
 ```
 
+在不发布的情况下，用本地代码连接真实 D1 做只读验证：
+
+```bash
+npm run cf:dev:remote-readonly
+# 另开一个终端：
+npm run smoke:remote-readonly
+```
+
+`cf:dev:remote-readonly` 会从私有 `wrangler.local.toml` 生成被 Git 忽略的 `wrangler.remote-readonly.toml`，给 D1 binding 设置 `remote = true`，并启用 `READ_ONLY_REMOTE_D1_PROBE=true`。在这个模式下，Worker 会在进入 API 前拒绝可变更数据的 HTTP method。这个模式只用于只读 smoke；remote D1 写入无法自动撤销。
+
 Cloudflare Workers Builds 连接 GitHub 时可使用：
 
 - build command: `npm run build`

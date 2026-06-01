@@ -5,4 +5,5 @@ interface Env {
   READ_PASSWORD?: string;
   SESSION_SECRET?: string;
   ALLOW_DEV_DEFAULT_PASSWORDS?: string;
+  READ_ONLY_REMOTE_D1_PROBE?: string;
 }

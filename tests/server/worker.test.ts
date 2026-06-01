@@ -2,6 +2,21 @@ import { describe, expect, test } from "vitest";
 import worker from "../../src/worker";
 
 describe("worker asset fallback", () => {
+  test("read-only remote D1 probe mode rejects mutating requests before they reach the API", async () => {
+    const env = {
+      READ_ONLY_REMOTE_D1_PROBE: "true",
+      ASSETS: {
+        fetch: async () => new Response("should not reach assets")
+      }
+    } as unknown as Env;
+
+    const response = await worker.fetch(new Request("https://example.com/api/events", { method: "POST" }), env);
+
+    expect(response.status).toBe(405);
+    expect(response.headers.get("allow")).toBe("GET, HEAD, OPTIONS");
+    await expect(response.json()).resolves.toEqual({ error: "Read-only remote D1 probe rejects mutating requests" });
+  });
+
   test("unknown machine paths return JSON 404 instead of the app shell", async () => {
     const env = {
       ASSETS: {

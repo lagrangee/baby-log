@@ -93,6 +93,16 @@ cp .env.example .env
 npm run cf:deploy
 ```
 
+Verify local code against the real D1 database without publishing:
+
+```bash
+npm run cf:dev:remote-readonly
+# In another terminal:
+npm run smoke:remote-readonly
+```
+
+`cf:dev:remote-readonly` generates ignored `wrangler.remote-readonly.toml` from private `wrangler.local.toml`, sets `remote = true` on the D1 binding, and enables `READ_ONLY_REMOTE_D1_PROBE=true`. In this mode the Worker rejects mutating HTTP methods before they can reach the API. Use it only for read-only smoke checks; remote D1 writes cannot be undone.
+
 Cloudflare Workers Builds can connect to GitHub with:
 
 - build command: `npm run build`
