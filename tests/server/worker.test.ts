@@ -17,6 +17,29 @@ describe("worker asset fallback", () => {
     await expect(response.json()).resolves.toEqual({ error: "Read-only remote D1 probe rejects mutating requests" });
   });
 
+  test("read-only remote D1 probe mode allows admin login without writing setup metadata", async () => {
+    const env = {
+      READ_ONLY_REMOTE_D1_PROBE: "true",
+      ADMIN_PASSWORD: "local-secret",
+      SESSION_SECRET: "local-session-secret",
+      DB: readOnlyMetaDb(),
+      ASSETS: {
+        fetch: async () => new Response("should not reach assets")
+      }
+    } as unknown as Env;
+
+    const response = await worker.fetch(
+      new Request("https://example.com/api/session/admin/login", {
+        method: "POST",
+        body: JSON.stringify({ password: "local-secret" })
+      }),
+      env
+    );
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get("set-cookie")).toContain("yb_admin_session=");
+  });
+
   test("unknown machine paths return JSON 404 instead of the app shell", async () => {
     const env = {
       ASSETS: {
@@ -32,3 +55,23 @@ describe("worker asset fallback", () => {
     await expect(response.json()).resolves.toEqual({ error: "Machine endpoint not found" });
   });
 });
+
+function readOnlyMetaDb(): D1Database {
+  return {
+    prepare(sql: string) {
+      return {
+        bind() {
+          return {
+            async first() {
+              if (sql.includes("SELECT value FROM app_meta")) return null;
+              throw new Error(`Unexpected read-only test query: ${sql}`);
+            },
+            async run() {
+              throw new Error("Remote read-only login must not write app_meta");
+            }
+          };
+        }
+      };
+    }
+  } as unknown as D1Database;
+}

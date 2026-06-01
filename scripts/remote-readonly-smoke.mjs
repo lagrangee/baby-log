@@ -61,9 +61,9 @@ const checks = [
     expect: async (response) => assertStatus(response, 405)
   },
   {
-    label: "login write blocked",
+    label: "invalid login remains unauthorized",
     request: () => fetchUrl("/api/session/admin/login", { method: "POST", body: "{}" }),
-    expect: async (response) => assertStatus(response, 405)
+    expect: async (response) => assertStatus(response, 401)
   }
 ];
 

@@ -638,6 +638,7 @@ async function getSessionSecret(env: Env, store: Store, nowIso: string): Promise
   if (env.SESSION_SECRET) return env.SESSION_SECRET;
   const existing = await store.getMeta("session_secret");
   if (existing) return existing;
+  if (isReadOnlyRemoteD1Probe(env)) throw httpError(500, "Session secret is not configured for read-only verification");
   const generated = crypto.randomUUID();
   await store.setMeta("session_secret", generated, nowIso);
   return generated;
@@ -648,10 +649,14 @@ async function getPasswordHash(env: Env, store: Store, role: SessionRole, nowIso
   const existing = await store.getMeta(key);
   const configuredPassword = role === "admin" ? env.ADMIN_PASSWORD : env.READ_PASSWORD;
   const hashed = await resolveLoginPasswordHash(role, existing, configuredPassword, env.ALLOW_DEV_DEFAULT_PASSWORDS === "true");
-  if (configuredPassword && hashed !== existing) {
+  if (configuredPassword && hashed !== existing && !isReadOnlyRemoteD1Probe(env)) {
     await store.setMeta(key, hashed, nowIso);
   }
   return hashed;
+}
+
+function isReadOnlyRemoteD1Probe(env: Env): boolean {
+  return env.READ_ONLY_REMOTE_D1_PROBE === "true";
 }
 
 function clampNumber(value: number, min: number, max: number) {

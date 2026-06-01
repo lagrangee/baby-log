@@ -25,7 +25,10 @@ export default {
 };
 
 function isBlockedByReadOnlyRemoteD1Probe(request: Request, env: Env): boolean {
-  return env.READ_ONLY_REMOTE_D1_PROBE === "true" && !["GET", "HEAD", "OPTIONS"].includes(request.method);
+  if (env.READ_ONLY_REMOTE_D1_PROBE !== "true") return false;
+  if (["GET", "HEAD", "OPTIONS"].includes(request.method)) return false;
+  const pathname = new URL(request.url).pathname;
+  return !["/api/session/admin/login", "/api/session/read/login", "/api/session/logout"].includes(pathname);
 }
 
 async function serveAsset(request: Request, env: Env): Promise<Response> {
