@@ -48,7 +48,7 @@ ALLOW_DEV_DEFAULT_PASSWORDS=true npm run cf:dev -- --local --port 8787
 
 ## Cloudflare 配置
 
-`wrangler.toml` 只能作为可公开提交的模板。Git 中只保留占位 route 和占位 D1 ID。真实域名、D1 ID、token 和密码应放在 ignored 本地文件或 Cloudflare 设置中。
+`wrangler.toml` 只能作为可公开提交的模板。Git 中只保留占位 route 和占位 D1 ID。真实域名、D1 ID、token 和密码应放在 ignored 本地文件、生成的部署配置或 Cloudflare 设置中。
 
 创建 D1 数据库：
 
@@ -58,7 +58,7 @@ npx wrangler d1 create baby_log
 
 把返回的 database ID 填入私有部署配置，或在 Cloudflare dashboard 中配置。若使用本地命令行部署，真实值应放入 ignored 文件，例如 `wrangler.local.toml` 或 `wrangler.prod.toml`。
 
-生产 Worker 变量：
+生产运行时变量和 secret 应在 Worker 设置中配置，不要写入 Git：
 
 - `ADMIN_PASSWORD`
 - `READ_PASSWORD`
@@ -77,16 +77,32 @@ npm run d1:migrate:local
 npm run d1:migrate:remote
 ```
 
-部署：
+使用被 Git 忽略的本地 Wrangler 配置部署：
 
 ```bash
+cp wrangler.toml wrangler.local.toml
+# 在 wrangler.local.toml 中填入真实 Worker route 和 D1 database ID。
+npm run cf:deploy:local
+```
+
+使用生成的 Wrangler 配置部署：
+
+```bash
+cp .env.example .env
+# 在 .env 中填入真实 Worker route 和 D1 database ID。
 npm run cf:deploy
 ```
 
 Cloudflare Workers Builds 连接 GitHub 时可使用：
 
 - build command: `npm run build`
-- deploy command: `npx wrangler deploy`
+- deploy command: `npm run cf:deploy`
+- production branch: `main`
+- required build variables/secrets: `BABY_LOG_WORKER_NAME`, `BABY_LOG_ROUTE_PATTERN`, `BABY_LOG_D1_DATABASE_NAME`, `BABY_LOG_D1_DATABASE_ID`
+
+生成的部署配置默认使用 `keep_vars = true`，这样 Wrangler deploy 不会覆盖 dashboard 中维护的运行时变量。
+
+如果是把已有 Worker 接到这个新仓库，Cloudflare 里的 Worker name 必须和 `BABY_LOG_WORKER_NAME` 一致。要把旧 Git repo 平移到 `lagrangee/baby-log`，先断开旧 build integration，再把这个 Worker 重新连接到新 repo，最后推一个小 commit 确认 build。
 
 生产 D1 migration 需要明确执行，不要默认认为 Git push 已迁移远端数据库。
 

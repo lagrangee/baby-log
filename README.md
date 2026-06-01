@@ -48,7 +48,7 @@ Do not enable fallback passwords in production.
 
 ## Cloudflare Configuration
 
-`wrangler.toml` is a public template only. Keep placeholder routes and placeholder D1 IDs in Git. Put real domains, D1 IDs, tokens, and passwords in ignored local files or Cloudflare settings.
+`wrangler.toml` is a public template only. Keep placeholder routes and placeholder D1 IDs in Git. Put real domains, D1 IDs, tokens, and passwords in ignored local files, generated deploy config, or Cloudflare settings.
 
 Create the D1 database:
 
@@ -58,7 +58,7 @@ npx wrangler d1 create baby_log
 
 Copy the returned database ID into a private deployment configuration, or update it in the Cloudflare dashboard. For local command-line deploys, keep real values in ignored files such as `wrangler.local.toml` or `wrangler.prod.toml`.
 
-Production Worker variables:
+Set production runtime variables and secrets in the Worker settings, not in Git:
 
 - `ADMIN_PASSWORD`
 - `READ_PASSWORD`
@@ -77,16 +77,32 @@ npm run d1:migrate:local
 npm run d1:migrate:remote
 ```
 
-Deploy:
+Deploy with an ignored local Wrangler config:
 
 ```bash
+cp wrangler.toml wrangler.local.toml
+# Edit wrangler.local.toml with the real Worker route and D1 database ID.
+npm run cf:deploy:local
+```
+
+Deploy with a generated Wrangler config:
+
+```bash
+cp .env.example .env
+# Edit .env with the real Worker route and D1 database ID.
 npm run cf:deploy
 ```
 
 Cloudflare Workers Builds can connect to GitHub with:
 
 - build command: `npm run build`
-- deploy command: `npx wrangler deploy`
+- deploy command: `npm run cf:deploy`
+- production branch: `main`
+- required build variables/secrets: `BABY_LOG_WORKER_NAME`, `BABY_LOG_ROUTE_PATTERN`, `BABY_LOG_D1_DATABASE_NAME`, `BABY_LOG_D1_DATABASE_ID`
+
+The generated deploy config uses `keep_vars = true` by default so a Wrangler deploy does not overwrite runtime variables managed in the dashboard.
+
+If you connect an existing Worker to this repository, make sure the Worker name in Cloudflare matches `BABY_LOG_WORKER_NAME`. To move an existing Worker from an old Git repository to `lagrangee/baby-log`, disconnect the old build integration first, reconnect the Worker to the new repository, then push a small commit to confirm the build.
 
 Run production D1 migrations deliberately; do not assume a Git push has migrated the remote database.
 

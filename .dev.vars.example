@@ -1,0 +1,10 @@
+# Local development variables. Copy to .dev.vars and keep real values private.
+ADMIN_PASSWORD=admin
+READ_PASSWORD=read
+SESSION_SECRET=change-this-local-secret
+ALLOW_DEV_DEFAULT_PASSWORDS=true
+
+# Optional ChatGPT source-pack automation.
+BABY_LOG_MACHINE_BASE_URL=http://127.0.0.1:8787
+BABY_LOG_MACHINE_TOKEN=replace-with-local-machine-token
+BABY_LOG_CHATGPT_SOURCE_DIR=/absolute/private/path/baby-log-source-pack

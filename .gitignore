@@ -11,6 +11,7 @@ dist/
 wrangler.local.toml
 wrangler.prod.toml
 wrangler.private.toml
+wrangler.generated.toml
 review/
 chatgpt-source-pack/
 docs/planning/
