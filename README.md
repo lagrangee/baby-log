@@ -103,10 +103,20 @@ npm run smoke:remote-readonly
 
 `cf:dev:remote-readonly` generates ignored `wrangler.remote-readonly.toml` from private `wrangler.local.toml`, sets `remote = true` on the D1 binding, and enables `READ_ONLY_REMOTE_D1_PROBE=true`. In this mode the Worker rejects mutating HTTP methods before they can reach the API. Use it only for read-only smoke checks; remote D1 writes cannot be undone.
 
+Upload a Cloudflare version without changing live traffic:
+
+```bash
+npm run cf:upload -- --dry-run
+npm run cf:upload
+```
+
+`cf:upload` uses `wrangler versions upload`, not `wrangler deploy`. It creates a version for preview/verification and does not promote it to the active deployment.
+
 Cloudflare Workers Builds can connect to GitHub with:
 
 - build command: `npm run build`
-- deploy command: `npm run cf:deploy`
+- deploy command for safe migration rehearsal: `npm run cf:upload`
+- deploy command after manual approval to cut over: `npm run cf:deploy`
 - production branch: `main`
 - required build variables/secrets: `BABY_LOG_WORKER_NAME`, `BABY_LOG_ROUTE_PATTERN`, `BABY_LOG_D1_DATABASE_NAME`, `BABY_LOG_D1_DATABASE_ID`
 

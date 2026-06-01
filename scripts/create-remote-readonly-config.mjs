@@ -13,6 +13,7 @@ if (!fs.existsSync(inputPath)) {
 let config = fs.readFileSync(inputPath, "utf8");
 
 config = forceWorkersDevOnly(config);
+config = upsertAssetsRunWorkerFirst(config, ["/api/*", "/machine/*"]);
 config = upsertRemoteD1(config);
 config = upsertStringVar(config, "READ_ONLY_REMOTE_D1_PROBE", "true");
 
@@ -51,6 +52,18 @@ function forceWorkersDevOnly(input) {
     next = next.replace(/^(compatibility_date\s*=\s*"[^"]+"\n)/m, "$1workers_dev = true\n");
   }
   return next;
+}
+
+function upsertAssetsRunWorkerFirst(input, patterns) {
+  const assetsPattern = /(\[assets\][\s\S]*?)(?=\n\[[^\n]*\]|$)/;
+  const match = input.match(assetsPattern);
+  if (!match) throw new Error("No [assets] table found in Wrangler config.");
+  const line = `run_worker_first = [${patterns.map((pattern) => JSON.stringify(pattern)).join(", ")}]`;
+  const assetsTable = match[1];
+  const nextAssetsTable = /^\s*run_worker_first\s*=.*$/m.test(assetsTable)
+    ? assetsTable.replace(/^\s*run_worker_first\s*=.*$/m, line)
+    : `${assetsTable.trimEnd()}\n${line}\n`;
+  return input.replace(assetsTable, nextAssetsTable);
 }
 
 function upsertStringVar(input, key, value) {

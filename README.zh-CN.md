@@ -103,10 +103,20 @@ npm run smoke:remote-readonly
 
 `cf:dev:remote-readonly` 会从私有 `wrangler.local.toml` 生成被 Git 忽略的 `wrangler.remote-readonly.toml`，给 D1 binding 设置 `remote = true`，并启用 `READ_ONLY_REMOTE_D1_PROBE=true`。在这个模式下，Worker 会在进入 API 前拒绝可变更数据的 HTTP method。这个模式只用于只读 smoke；remote D1 写入无法自动撤销。
 
+上传 Cloudflare version 但不切线上流量：
+
+```bash
+npm run cf:upload -- --dry-run
+npm run cf:upload
+```
+
+`cf:upload` 使用 `wrangler versions upload`，不是 `wrangler deploy`。它只创建用于 preview/验证的 version，不会 promote 成 active deployment。
+
 Cloudflare Workers Builds 连接 GitHub 时可使用：
 
 - build command: `npm run build`
-- deploy command: `npm run cf:deploy`
+- 安全迁移演练 deploy command: `npm run cf:upload`
+- 手动确认切流量后的 deploy command: `npm run cf:deploy`
 - production branch: `main`
 - required build variables/secrets: `BABY_LOG_WORKER_NAME`, `BABY_LOG_ROUTE_PATTERN`, `BABY_LOG_D1_DATABASE_NAME`, `BABY_LOG_D1_DATABASE_ID`
 
