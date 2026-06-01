@@ -1,0 +1,314 @@
+{
+  "template_id": "record_items_v1",
+  "version": "1.0.0",
+  "frozen": true,
+  "notes": [
+    "Codex must not add event types outside this list.",
+    "Custom checklist items and custom milestones are allowed; custom event types are not allowed."
+  ],
+  "home_quick_buttons_order": [
+    "feed_breast",
+    "feed_bottle",
+    "diaper_pee",
+    "diaper_poop",
+    "sleep_session",
+    "temperature",
+    "medicine",
+    "note"
+  ],
+  "more_record_types": [
+    "symptom",
+    "tummy_time",
+    "growth_measurement"
+  ],
+  "items": [
+    {
+      "event_type": "feed_breast",
+      "label": "Breastfeed",
+      "category": "feed",
+      "quick_button": true,
+      "interaction_mode": "instant_create_with_optional_sheet",
+      "required_fields": [
+        "occurred_at"
+      ],
+      "optional_fields": [
+        "details_json.side",
+        "details_json.duration_min",
+        "note"
+      ],
+      "details_schema": {
+        "side": {
+          "type": "enum",
+          "allowed": [
+            "left",
+            "right",
+            "both",
+            "unknown"
+          ]
+        },
+        "duration_min": {
+          "type": "number",
+          "min": 0
+        }
+      }
+    },
+    {
+      "event_type": "feed_bottle",
+      "label": "Bottle",
+      "category": "feed",
+      "quick_button": true,
+      "interaction_mode": "open_sheet_before_create",
+      "required_fields": [
+        "occurred_at",
+        "amount_value",
+        "amount_unit"
+      ],
+      "fixed_unit": "ml",
+      "optional_fields": [
+        "details_json.milk_type",
+        "note"
+      ],
+      "details_schema": {
+        "milk_type": {
+          "type": "enum",
+          "allowed": [
+            "formula",
+            "breastmilk",
+            "mixed",
+            "other"
+          ]
+        }
+      }
+    },
+    {
+      "event_type": "diaper_pee",
+      "label": "Pee",
+      "category": "diaper",
+      "quick_button": true,
+      "interaction_mode": "instant_create",
+      "required_fields": [
+        "occurred_at"
+      ],
+      "optional_fields": [
+        "note"
+      ]
+    },
+    {
+      "event_type": "diaper_poop",
+      "label": "Poop",
+      "category": "diaper",
+      "quick_button": true,
+      "interaction_mode": "instant_create_with_optional_sheet",
+      "required_fields": [
+        "occurred_at"
+      ],
+      "optional_fields": [
+        "details_json.color",
+        "details_json.texture",
+        "note"
+      ],
+      "details_schema": {
+        "color": {
+          "type": "enum",
+          "allowed": [
+            "black_tar",
+            "green",
+            "yellow",
+            "brown",
+            "red",
+            "white",
+            "other"
+          ]
+        },
+        "texture": {
+          "type": "enum",
+          "allowed": [
+            "watery",
+            "loose",
+            "seedy",
+            "pasty",
+            "hard",
+            "mucus",
+            "other"
+          ]
+        }
+      }
+    },
+    {
+      "event_type": "sleep_session",
+      "label": "Sleep",
+      "category": "sleep",
+      "quick_button": true,
+      "interaction_mode": "toggle_open_close_session",
+      "required_fields": [
+        "occurred_at"
+      ],
+      "optional_fields": [
+        "ended_at",
+        "note"
+      ],
+      "rules": [
+        "Only one open sleep session may exist at a time."
+      ]
+    },
+    {
+      "event_type": "temperature",
+      "label": "Temperature",
+      "category": "health",
+      "quick_button": true,
+      "interaction_mode": "open_sheet_before_create",
+      "required_fields": [
+        "occurred_at",
+        "amount_value",
+        "amount_unit"
+      ],
+      "fixed_unit": "celsius",
+      "optional_fields": [
+        "details_json.method",
+        "note"
+      ],
+      "details_schema": {
+        "method": {
+          "type": "enum",
+          "allowed": [
+            "rectal",
+            "ear",
+            "forehead",
+            "armpit",
+            "oral",
+            "other"
+          ]
+        }
+      },
+      "ui_rules": [
+        "If amount_value >= 38.0, show a neutral fever warning banner."
+      ]
+    },
+    {
+      "event_type": "medicine",
+      "label": "Medicine",
+      "category": "health",
+      "quick_button": true,
+      "interaction_mode": "open_sheet_before_create",
+      "required_fields": [
+        "occurred_at",
+        "details_json.name"
+      ],
+      "optional_fields": [
+        "amount_value",
+        "amount_unit",
+        "details_json.route",
+        "details_json.reason",
+        "note"
+      ],
+      "details_schema": {
+        "name": {
+          "type": "string"
+        },
+        "route": {
+          "type": "enum",
+          "allowed": [
+            "oral",
+            "nasal",
+            "topical",
+            "rectal",
+            "other"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "event_type": "note",
+      "label": "Note",
+      "category": "note",
+      "quick_button": true,
+      "interaction_mode": "open_sheet_before_create",
+      "required_fields": [
+        "occurred_at",
+        "note"
+      ]
+    },
+    {
+      "event_type": "symptom",
+      "label": "Symptom",
+      "category": "health",
+      "quick_button": false,
+      "interaction_mode": "open_sheet_before_create",
+      "required_fields": [
+        "occurred_at"
+      ],
+      "optional_fields": [
+        "details_json.symptom_tags",
+        "details_json.severity",
+        "note"
+      ],
+      "details_schema": {
+        "symptom_tags": {
+          "type": "array",
+          "items": [
+            "cough",
+            "runny_nose",
+            "rash",
+            "vomit",
+            "constipation",
+            "diarrhea",
+            "poor_feeding",
+            "other"
+          ]
+        },
+        "severity": {
+          "type": "enum",
+          "allowed": [
+            "mild",
+            "moderate",
+            "severe",
+            "unknown"
+          ]
+        }
+      }
+    },
+    {
+      "event_type": "tummy_time",
+      "label": "Tummy time",
+      "category": "activity",
+      "quick_button": false,
+      "interaction_mode": "session_or_duration",
+      "required_fields": [
+        "occurred_at"
+      ],
+      "optional_fields": [
+        "ended_at",
+        "details_json.duration_min",
+        "note"
+      ]
+    },
+    {
+      "event_type": "growth_measurement",
+      "label": "Growth measurement",
+      "category": "measurement",
+      "quick_button": false,
+      "interaction_mode": "open_sheet_before_create",
+      "required_fields": [
+        "occurred_at",
+        "details_json.measure_type",
+        "amount_value"
+      ],
+      "optional_fields": [
+        "note"
+      ],
+      "details_schema": {
+        "measure_type": {
+          "type": "enum",
+          "allowed": [
+            "weight_kg",
+            "length_cm",
+            "head_circumference_cm"
+          ]
+        }
+      }
+    }
+  ]
+}

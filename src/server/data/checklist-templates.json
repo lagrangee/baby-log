@@ -1,0 +1,2665 @@
+{
+  "schema_version": "2.2.0",
+  "allowed_phase": [
+    "prenatal",
+    "birth_hospital",
+    "first_week",
+    "first_month",
+    "infant_1_3m",
+    "infant_4_7m",
+    "infant_8_12m",
+    "toddler_12_18m",
+    "toddler_18_24m",
+    "toddler_24_30m",
+    "toddler_3y",
+    "preschool_4_5y",
+    "early_school_6y"
+  ],
+  "allowed_source_basis": [
+    "aap_book",
+    "aap_bright_futures",
+    "healthychildren",
+    "cdc_us",
+    "beijing_local",
+    "china_local",
+    "clinician",
+    "custom"
+  ],
+  "allowed_item_type": [
+    "well_visit",
+    "screening",
+    "vaccine",
+    "admin",
+    "safety",
+    "feeding_plan",
+    "custom"
+  ],
+  "templates": [
+    {
+      "template_code": "aap_early_childhood_care_v1",
+      "template_version": "1.0.0",
+      "title": "AAP / HealthyChildren 早期照护清单",
+      "description": "按 PR2.2 指定项目转写为家庭任务的静态清单目录；不生成诊断、治疗、用药建议或完整疫苗日程。",
+      "phase": "prenatal",
+      "source_basis": "aap_book",
+      "auto_apply": false,
+      "import_policy": "manual",
+      "requires_confirmation": false,
+      "items": [
+        {
+          "key": "choose_pediatric_provider",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "choose_pediatric_provider",
+          "title": "确认儿科医生/儿保机构与联系方式",
+          "title": "确认儿科医生/儿保机构与联系方式",
+          "description": "记录儿科医生、夜间咨询方式、急诊/医院路径和首诊预约方式。",
+          "item_type": "admin",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "visit_prep",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 1,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "记录儿科医生、夜间咨询方式、急诊/医院路径和首诊预约方式。",
+            "source_basis": "aap_book",
+            "category": "visit_prep",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "install_rear_facing_car_seat",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "install_rear_facing_car_seat",
+          "title": "安装并检查新生儿后向安全座椅",
+          "title": "安装并检查新生儿后向安全座椅",
+          "description": "安装在后排；尽量请专业人员或医院资源检查安装是否正确。",
+          "item_type": "safety",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 2,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "安装在后排；尽量请专业人员或医院资源检查安装是否正确。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "setup_safe_sleep_surface",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "setup_safe_sleep_surface",
+          "title": "准备独立、安全的睡眠表面",
+          "title": "准备独立、安全的睡眠表面",
+          "description": "准备婴儿床/摇篮/便携床；床面平整偏硬；不放枕头、松散被褥、围栏垫、毛绒玩具。",
+          "item_type": "safety",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "sleep_safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 3,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "准备婴儿床/摇篮/便携床；床面平整偏硬；不放枕头、松散被褥、围栏垫、毛绒玩具。",
+            "source_basis": "aap_book",
+            "category": "sleep_safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "prepare_feeding_support",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "prepare_feeding_support",
+          "title": "确认初期喂养方案与支持资源",
+          "title": "确认初期喂养方案与支持资源",
+          "description": "记录是否计划母乳、是否需要泵奶器、哺乳顾问/医院哺乳支持联系方式。",
+          "item_type": "feeding_plan",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 4,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "记录是否计划母乳、是否需要泵奶器、哺乳顾问/医院哺乳支持联系方式。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "prepare_birth_contacts",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "prepare_birth_contacts",
+          "title": "整理分娩与出院联系人清单",
+          "title": "整理分娩与出院联系人清单",
+          "description": "整理医院、产科、儿科、家人、月嫂/护理人员、交通与证件信息。",
+          "item_type": "admin",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "records",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 5,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "整理医院、产科、儿科、家人、月嫂/护理人员、交通与证件信息。",
+            "source_basis": "aap_book",
+            "category": "records",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "family_roles_first_two_weeks",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "family_roles_first_two_weeks",
+          "title": "分配出生后前两周家庭职责",
+          "title": "分配出生后前两周家庭职责",
+          "description": "明确夜间换尿布、饭菜、产妇休息、复诊、喂养/尿布记录由谁负责。",
+          "item_type": "admin",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "family_ops",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 6,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "明确夜间换尿布、饭菜、产妇休息、复诊、喂养/尿布记录由谁负责。",
+            "source_basis": "aap_book",
+            "category": "family_ops",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "vaccination_record_shell",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "vaccination_record_shell",
+          "title": "建立接种证/疫苗记录占位，不自动生成完整疫苗表",
+          "title": "建立接种证/疫苗记录占位，不自动生成完整疫苗表",
+          "description": "只预留记录入口；出生后按当地社区医院/儿科医生安排录入。",
+          "item_type": "vaccine",
+          "phase": "prenatal",
+          "source_phase": "prenatal_late",
+          "category": "vaccination_record",
+          "activation": "manual_optional",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 7,
+          "due_rule_json": {
+            "trigger": "before_birth"
+          },
+          "details_json": {
+            "parent_task": "只预留记录入口；出生后按当地社区医院/儿科医生安排录入。",
+            "source_basis": "aap_book",
+            "category": "vaccination_record",
+            "activation": "manual_optional",
+            "priority_code": "P1",
+            "trigger_label": "before_birth",
+            "source_phase": "prenatal_late"
+          }
+        },
+        {
+          "key": "skin_to_skin_first_feed",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "skin_to_skin_first_feed",
+          "title": "记录出生后皮肤接触与首次喂养",
+          "title": "记录出生后皮肤接触与首次喂养",
+          "description": "记录是否完成皮肤接触、首次尝试哺乳/喂养、是否需要哺乳支持。",
+          "item_type": "feeding_plan",
+          "phase": "birth_hospital",
+          "source_phase": "birth_hospital",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 8,
+          "due_rule_json": {
+            "age_anchor": "birth_day"
+          },
+          "details_json": {
+            "parent_task": "记录是否完成皮肤接触、首次尝试哺乳/喂养、是否需要哺乳支持。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "birth_day",
+            "source_phase": "birth_hospital"
+          }
+        },
+        {
+          "key": "newborn_prevention_record",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "newborn_prevention_record",
+          "title": "记录维生素K、眼部预防用药、乙肝首针等医院措施",
+          "title": "记录维生素K、眼部预防用药、乙肝首针等医院措施",
+          "description": "只记录是否完成、时间、医院说明；不做用药或疫苗决策。",
+          "item_type": "admin",
+          "phase": "birth_hospital",
+          "source_phase": "birth_hospital",
+          "category": "medical_record",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 9,
+          "due_rule_json": {
+            "age_anchor": "birth_day"
+          },
+          "details_json": {
+            "parent_task": "只记录是否完成、时间、医院说明；不做用药或疫苗决策。",
+            "source_basis": "aap_book",
+            "category": "medical_record",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "birth_day",
+            "source_phase": "birth_hospital"
+          }
+        },
+        {
+          "key": "newborn_screenings_record",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "newborn_screenings_record",
+          "title": "记录新生儿筛查结果或待出结果",
+          "title": "记录新生儿筛查结果或待出结果",
+          "description": "记录听力、代谢筛查、先心筛查、黄疸评估等是否完成，以及医院何时给结果。",
+          "item_type": "admin",
+          "phase": "birth_hospital",
+          "source_phase": "birth_hospital",
+          "category": "medical_record",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 10,
+          "due_rule_json": {
+            "trigger": "birth_to_discharge"
+          },
+          "details_json": {
+            "parent_task": "记录听力、代谢筛查、先心筛查、黄疸评估等是否完成，以及医院何时给结果。",
+            "source_basis": "aap_book",
+            "category": "medical_record",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "birth_to_discharge",
+            "source_phase": "birth_hospital"
+          }
+        },
+        {
+          "key": "discharge_followup_plan",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "discharge_followup_plan",
+          "title": "确认出院后24–48小时或3–5天随访安排",
+          "title": "确认出院后24–48小时或3–5天随访安排",
+          "description": "出院前确认首个儿科/儿保随访时间；重点关注体重、黄疸和喂养。",
+          "item_type": "admin",
+          "phase": "birth_hospital",
+          "source_phase": "birth_hospital",
+          "category": "visit_prep",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 11,
+          "due_rule_json": {
+            "trigger": "birth_to_discharge"
+          },
+          "details_json": {
+            "parent_task": "出院前确认首个儿科/儿保随访时间；重点关注体重、黄疸和喂养。",
+            "source_basis": "aap_book",
+            "category": "visit_prep",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "birth_to_discharge",
+            "source_phase": "birth_hospital"
+          }
+        },
+        {
+          "key": "safe_ride_home",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safe_ride_home",
+          "title": "出院前确认安全座椅用于回家路程",
+          "title": "出院前确认安全座椅用于回家路程",
+          "description": "回家当天再次检查后向安装、肩带高度、Baby固定方式。",
+          "item_type": "safety",
+          "phase": "birth_hospital",
+          "source_phase": "birth_hospital",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 12,
+          "due_rule_json": {
+            "trigger": "discharge_day"
+          },
+          "details_json": {
+            "parent_task": "回家当天再次检查后向安装、肩带高度、Baby固定方式。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "discharge_day",
+            "source_phase": "birth_hospital"
+          }
+        },
+        {
+          "key": "well_visit_3_5_days",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_3_5_days",
+          "title": "完成出生后3–5天儿科/儿保随访",
+          "title": "完成出生后3–5天儿科/儿保随访",
+          "description": "带上出院小结、出生体重、喂养/尿布记录、黄疸情况、筛查结果。",
+          "item_type": "well_visit",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 13,
+          "due_rule_json": {
+            "age_anchor": "3_5_day"
+          },
+          "details_json": {
+            "parent_task": "带上出院小结、出生体重、喂养/尿布记录、黄疸情况、筛查结果。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "3-5d",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "feeding_diaper_weight_watch",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "feeding_diaper_weight_watch",
+          "title": "每日核对喂养、湿尿布、排便和体重趋势",
+          "title": "每日核对喂养、湿尿布、排便和体重趋势",
+          "description": "记录喂养次数、湿尿布、排便、是否明显嗜睡或吸吮困难；随访时给医生看。",
+          "item_type": "feeding_plan",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "feeding",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 14,
+          "due_rule_json": {
+            "age_window": {
+              "start_days": 0,
+              "end_days": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "记录喂养次数、湿尿布、排便、是否明显嗜睡或吸吮困难；随访时给医生看。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "0-7d",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "jaundice_watch",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "jaundice_watch",
+          "title": "观察黄疸、精神状态和喂养能力",
+          "title": "观察黄疸、精神状态和喂养能力",
+          "description": "若皮肤/眼白黄染加重、精神差、喂养差或医生要求复查，按医嘱处理。",
+          "item_type": "custom",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "health_watch",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 15,
+          "due_rule_json": {
+            "age_window": {
+              "start_days": 0,
+              "end_days": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "若皮肤/眼白黄染加重、精神差、喂养差或医生要求复查，按医嘱处理。",
+            "source_basis": "aap_book",
+            "category": "health_watch",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "0-7d",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "cord_bathing_basic",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "cord_bathing_basic",
+          "title": "记录脐带护理与洗澡安排",
+          "title": "记录脐带护理与洗澡安排",
+          "description": "保持脐带区域清洁干燥；洗澡频率和方式按医院/儿科建议执行。",
+          "item_type": "admin",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "basic_care",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 16,
+          "due_rule_json": {
+            "age_window": {
+              "start_days": 0,
+              "end_days": 14
+            }
+          },
+          "details_json": {
+            "parent_task": "保持脐带区域清洁干燥；洗澡频率和方式按医院/儿科建议执行。",
+            "source_basis": "aap_book",
+            "category": "basic_care",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "0-14d",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "temperature_plan",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "temperature_plan",
+          "title": "准备体温测量和发热处理规则",
+          "title": "准备体温测量和发热处理规则",
+          "description": "确认家里有可用体温计；新生儿发热、精神差、喂养困难等应联系医生。",
+          "item_type": "custom",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "health_watch",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 17,
+          "due_rule_json": {
+            "age_window": {
+              "start_days": 0,
+              "end_days": 30
+            }
+          },
+          "details_json": {
+            "parent_task": "确认家里有可用体温计；新生儿发热、精神差、喂养困难等应联系医生。",
+            "source_basis": "aap_book",
+            "category": "health_watch",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "0-30d",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "safe_sleep_reference",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safe_sleep_reference",
+          "title": "每次睡眠都按安全睡眠原则执行",
+          "title": "每次睡眠都按安全睡眠原则执行",
+          "description": "仰卧、独立睡眠表面、避免软物和松散被褥；作为常驻参考，不每天生成任务。",
+          "item_type": "safety",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "sleep_safety",
+          "activation": "reference",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 18,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 0,
+              "end_months": 12
+            }
+          },
+          "details_json": {
+            "parent_task": "仰卧、独立睡眠表面、避免软物和松散被褥；作为常驻参考，不每天生成任务。",
+            "source_basis": "aap_book",
+            "category": "sleep_safety",
+            "activation": "reference",
+            "priority_code": "P0",
+            "trigger_label": "0-12m",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "parent_help_plan",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "parent_help_plan",
+          "title": "建立“父母撑不住时”的求助方案",
+          "title": "建立“父母撑不住时”的求助方案",
+          "description": "列出可接手Baby、准备饭菜、陪同就医的人；哭闹难以承受时先把Baby放到安全处。",
+          "item_type": "admin",
+          "phase": "first_week",
+          "source_phase": "newborn_first_week",
+          "category": "family_ops",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 19,
+          "due_rule_json": {
+            "age_window": {
+              "start_days": 0,
+              "end_days": 30
+            }
+          },
+          "details_json": {
+            "parent_task": "列出可接手Baby、准备饭菜、陪同就医的人；哭闹难以承受时先把Baby放到安全处。",
+            "source_basis": "aap_book",
+            "category": "family_ops",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "0-30d",
+            "source_phase": "newborn_first_week"
+          }
+        },
+        {
+          "key": "well_visit_1_month",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_1_month",
+          "title": "准备并完成1月龄儿科/儿保随访",
+          "title": "准备并完成1月龄儿科/儿保随访",
+          "description": "带喂养、尿布、体重、睡眠、黄疸/皮肤、筛查结果和问题清单。",
+          "item_type": "well_visit",
+          "phase": "first_month",
+          "source_phase": "newborn_first_month",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 20,
+          "due_rule_json": {
+            "age_anchor": "1_month"
+          },
+          "details_json": {
+            "parent_task": "带喂养、尿布、体重、睡眠、黄疸/皮肤、筛查结果和问题清单。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "1m",
+            "source_phase": "newborn_first_month"
+          }
+        },
+        {
+          "key": "growth_feeding_review_1m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "growth_feeding_review_1m",
+          "title": "复盘第1个月喂养是否稳定",
+          "title": "复盘第1个月喂养是否稳定",
+          "description": "检查喂养频率、吞咽/满足感、湿尿布、排便和体重增长；异常带给医生。",
+          "item_type": "feeding_plan",
+          "phase": "first_month",
+          "source_phase": "newborn_first_month",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 21,
+          "due_rule_json": {
+            "age_window": {
+              "start_days": 0,
+              "end_days": 30
+            }
+          },
+          "details_json": {
+            "parent_task": "检查喂养频率、吞咽/满足感、湿尿布、排便和体重增长；异常带给医生。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "0-30d",
+            "source_phase": "newborn_first_month"
+          }
+        },
+        {
+          "key": "bowel_urine_reference",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "bowel_urine_reference",
+          "title": "建立小便和大便正常波动参考",
+          "title": "建立小便和大便正常波动参考",
+          "description": "记录明显变化即可；结合精神、喂养和体重看，不因单次排便间隔变化过度焦虑。",
+          "item_type": "admin",
+          "phase": "first_month",
+          "source_phase": "newborn_first_month",
+          "category": "basic_care",
+          "activation": "reference",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 22,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 0,
+              "end_months": 2
+            }
+          },
+          "details_json": {
+            "parent_task": "记录明显变化即可；结合精神、喂养和体重看，不因单次排便间隔变化过度焦虑。",
+            "source_basis": "aap_book",
+            "category": "basic_care",
+            "activation": "reference",
+            "priority_code": "P1",
+            "trigger_label": "0-2m",
+            "source_phase": "newborn_first_month"
+          }
+        },
+        {
+          "key": "crying_colic_plan",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "crying_colic_plan",
+          "title": "制定哭闹/肠绞痛应对步骤",
+          "title": "制定哭闹/肠绞痛应对步骤",
+          "description": "按饥饿、尿布、冷热、拍嗝、抱哄、白噪音、短暂安全放下处理；禁止摇晃。",
+          "item_type": "custom",
+          "phase": "first_month",
+          "source_phase": "newborn_first_month",
+          "category": "behavior",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 23,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 0,
+              "end_months": 3
+            }
+          },
+          "details_json": {
+            "parent_task": "按饥饿、尿布、冷热、拍嗝、抱哄、白噪音、短暂安全放下处理；禁止摇晃。",
+            "source_basis": "aap_book",
+            "category": "behavior",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "0-3m",
+            "source_phase": "newborn_first_month"
+          }
+        },
+        {
+          "key": "tummy_time_awake",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "tummy_time_awake",
+          "title": "开始清醒且有人看护时的俯趴练习",
+          "title": "开始清醒且有人看护时的俯趴练习",
+          "description": "每天短时间、多次，在Baby清醒且有人看护时进行；睡眠仍保持仰卧。",
+          "item_type": "custom",
+          "phase": "first_month",
+          "source_phase": "newborn_first_month",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 24,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 0,
+              "end_months": 3
+            }
+          },
+          "details_json": {
+            "parent_task": "每天短时间、多次，在Baby清醒且有人看护时进行；睡眠仍保持仰卧。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "0-3m",
+            "source_phase": "newborn_first_month"
+          }
+        },
+        {
+          "key": "first_month_safety_check",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "first_month_safety_check",
+          "title": "完成第1个月家庭安全检查",
+          "title": "完成第1个月家庭安全检查",
+          "description": "检查安全座椅、洗澡水温、换尿布台、防窒息、防火烫伤、绳带/项链风险和头颈支撑。",
+          "item_type": "safety",
+          "phase": "first_month",
+          "source_phase": "newborn_first_month",
+          "category": "safety",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 25,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 0,
+              "end_months": 1
+            }
+          },
+          "details_json": {
+            "parent_task": "检查安全座椅、洗澡水温、换尿布台、防窒息、防火烫伤、绳带/项链风险和头颈支撑。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "0-1m",
+            "source_phase": "newborn_first_month"
+          }
+        },
+        {
+          "key": "well_visit_2_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_2_months",
+          "title": "准备并完成2月龄儿科/儿保随访",
+          "title": "准备并完成2月龄儿科/儿保随访",
+          "description": "带喂养、尿布、睡眠、发育观察和接种本；记录医生下一步计划。",
+          "item_type": "well_visit",
+          "phase": "infant_1_3m",
+          "source_phase": "infant_1_3m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 26,
+          "due_rule_json": {
+            "age_anchor": "2_month"
+          },
+          "details_json": {
+            "parent_task": "带喂养、尿布、睡眠、发育观察和接种本；记录医生下一步计划。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "2m",
+            "source_phase": "infant_1_3m"
+          }
+        },
+        {
+          "key": "vaccine_record_2m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "vaccine_record_2m",
+          "title": "2月龄接种安排：只核对并记录当地/医生计划",
+          "title": "2月龄接种安排：只核对并记录当地/医生计划",
+          "description": "不要由系统自动生成剂次；只记录社区医院或医生给出的接种日期、疫苗名和反应观察。",
+          "item_type": "vaccine",
+          "phase": "infant_1_3m",
+          "source_phase": "infant_1_3m",
+          "category": "vaccination_record",
+          "activation": "manual_optional",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 27,
+          "due_rule_json": {
+            "age_anchor": "2_month"
+          },
+          "details_json": {
+            "parent_task": "不要由系统自动生成剂次；只记录社区医院或医生给出的接种日期、疫苗名和反应观察。",
+            "source_basis": "aap_book",
+            "category": "vaccination_record",
+            "activation": "manual_optional",
+            "priority_code": "P1",
+            "trigger_label": "2m",
+            "source_phase": "infant_1_3m"
+          }
+        },
+        {
+          "key": "feeding_sleep_review_1_3m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "feeding_sleep_review_1_3m",
+          "title": "复盘1–3月龄喂养与睡眠节律",
+          "title": "复盘1–3月龄喂养与睡眠节律",
+          "description": "确认喂养是否稳定、夜间是否逐步拉长、白天小睡是否有基本规律。",
+          "item_type": "feeding_plan",
+          "phase": "infant_1_3m",
+          "source_phase": "infant_1_3m",
+          "category": "feeding_sleep",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 28,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 1,
+              "end_months": 3
+            }
+          },
+          "details_json": {
+            "parent_task": "确认喂养是否稳定、夜间是否逐步拉长、白天小睡是否有基本规律。",
+            "source_basis": "aap_book",
+            "category": "feeding_sleep",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "1-3m",
+            "source_phase": "infant_1_3m"
+          }
+        },
+        {
+          "key": "development_obs_1_3m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "development_obs_1_3m",
+          "title": "记录1–3月龄发育观察",
+          "title": "记录1–3月龄发育观察",
+          "description": "观察抬头/肢体活动、看人看物、听声音反应、发声、微笑和互动。",
+          "item_type": "custom",
+          "phase": "infant_1_3m",
+          "source_phase": "infant_1_3m",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 29,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 1,
+              "end_months": 3
+            }
+          },
+          "details_json": {
+            "parent_task": "观察抬头/肢体活动、看人看物、听声音反应、发声、微笑和互动。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "1-3m",
+            "source_phase": "infant_1_3m"
+          }
+        },
+        {
+          "key": "safety_falls_burns_choking_1_3m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safety_falls_burns_choking_1_3m",
+          "title": "完成1–3月龄跌落、烫伤、窒息风险检查",
+          "title": "完成1–3月龄跌落、烫伤、窒息风险检查",
+          "description": "不把婴儿座椅放高处；热饮/炉灶远离Baby；检查玩具小零件和锐边。",
+          "item_type": "safety",
+          "phase": "infant_1_3m",
+          "source_phase": "infant_1_3m",
+          "category": "safety",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 30,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 1,
+              "end_months": 3
+            }
+          },
+          "details_json": {
+            "parent_task": "不把婴儿座椅放高处；热饮/炉灶远离Baby；检查玩具小零件和锐边。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "1-3m",
+            "source_phase": "infant_1_3m"
+          }
+        },
+        {
+          "key": "breathing_fever_feeding_red_flags",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "breathing_fever_feeding_red_flags",
+          "title": "保留呼吸、发热、喂养困难红旗提醒",
+          "title": "保留呼吸、发热、喂养困难红旗提醒",
+          "description": "出现呼吸费力、发热、精神差、喂养明显下降等，按医生/急诊规则处理。",
+          "item_type": "custom",
+          "phase": "infant_1_3m",
+          "source_phase": "infant_1_3m",
+          "category": "health_watch",
+          "activation": "reference",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 31,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 0,
+              "end_months": 3
+            }
+          },
+          "details_json": {
+            "parent_task": "出现呼吸费力、发热、精神差、喂养明显下降等，按医生/急诊规则处理。",
+            "source_basis": "aap_book",
+            "category": "health_watch",
+            "activation": "reference",
+            "priority_code": "P0",
+            "trigger_label": "0-3m",
+            "source_phase": "infant_1_3m"
+          }
+        },
+        {
+          "key": "well_visit_4_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_4_months",
+          "title": "准备并完成4月龄儿科/儿保随访",
+          "title": "准备并完成4月龄儿科/儿保随访",
+          "description": "带上喂养、睡眠、翻身/运动、发声、视觉互动和接种本记录。",
+          "item_type": "well_visit",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 32,
+          "due_rule_json": {
+            "age_anchor": "4_month"
+          },
+          "details_json": {
+            "parent_task": "带上喂养、睡眠、翻身/运动、发声、视觉互动和接种本记录。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "4m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "well_visit_6_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_6_months",
+          "title": "准备并完成6月龄儿科/儿保随访",
+          "title": "准备并完成6月龄儿科/儿保随访",
+          "description": "重点准备辅食、睡眠、出牙、运动发育、安全和接种计划问题。",
+          "item_type": "well_visit",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 33,
+          "due_rule_json": {
+            "age_anchor": "6_month"
+          },
+          "details_json": {
+            "parent_task": "重点准备辅食、睡眠、出牙、运动发育、安全和接种计划问题。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "6m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "solid_food_readiness",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "solid_food_readiness",
+          "title": "准备辅食引入计划",
+          "title": "准备辅食引入计划",
+          "description": "和儿科医生确认是否准备好开始辅食；记录第一批食物、过敏反应观察和喂养节奏。",
+          "item_type": "feeding_plan",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 34,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 4,
+              "end_months": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "和儿科医生确认是否准备好开始辅食；记录第一批食物、过敏反应观察和喂养节奏。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-7m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "supplement_review_4_7m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "supplement_review_4_7m",
+          "title": "核对维生素/铁/氟等补充建议",
+          "title": "核对维生素/铁/氟等补充建议",
+          "description": "只记录医生建议；不要由系统自动建议剂量。",
+          "item_type": "feeding_plan",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 35,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 4,
+              "end_months": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "只记录医生建议；不要由系统自动建议剂量。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-7m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "teething_dental_start",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "teething_dental_start",
+          "title": "建立出牙与口腔护理记录",
+          "title": "建立出牙与口腔护理记录",
+          "description": "记录出牙迹象、清洁方式、夜间奶后口腔护理问题，并在儿保时询问。",
+          "item_type": "custom",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "oral_health",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 36,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 4,
+              "end_months": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "记录出牙迹象、清洁方式、夜间奶后口腔护理问题，并在儿保时询问。",
+            "source_basis": "aap_book",
+            "category": "oral_health",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-7m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "development_obs_4_7m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "development_obs_4_7m",
+          "title": "记录4–7月龄发育观察",
+          "title": "记录4–7月龄发育观察",
+          "description": "观察翻身/支撑、抓握、追视、咿呀发声、对人互动、探索物体。",
+          "item_type": "custom",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 37,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 4,
+              "end_months": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "观察翻身/支撑、抓握、追视、咿呀发声、对人互动、探索物体。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-7m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "safety_rolling_choking_water",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safety_rolling_choking_water",
+          "title": "完成翻身后安全、辅食窒息和水安全检查",
+          "title": "完成翻身后安全、辅食窒息和水安全检查",
+          "description": "Baby会翻身后跌落风险上升；辅食避免大块硬食；洗澡全程看护。",
+          "item_type": "safety",
+          "phase": "infant_4_7m",
+          "source_phase": "infant_4_7m",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 38,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 4,
+              "end_months": 7
+            }
+          },
+          "details_json": {
+            "parent_task": "Baby会翻身后跌落风险上升；辅食避免大块硬食；洗澡全程看护。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "4-7m",
+            "source_phase": "infant_4_7m"
+          }
+        },
+        {
+          "key": "well_visit_9_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_9_months",
+          "title": "准备并完成9月龄儿科/儿保随访",
+          "title": "准备并完成9月龄儿科/儿保随访",
+          "description": "带发育观察、辅食/饮水/杯子、睡眠、牙齿、安全和接种本。",
+          "item_type": "well_visit",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 39,
+          "due_rule_json": {
+            "age_anchor": "9_month"
+          },
+          "details_json": {
+            "parent_task": "带发育观察、辅食/饮水/杯子、睡眠、牙齿、安全和接种本。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "9m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "developmental_screening_9m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "developmental_screening_9m",
+          "title": "记录9月龄发育筛查是否完成",
+          "title": "记录9月龄发育筛查是否完成",
+          "description": "在9月龄儿保时核对是否完成发育筛查，保存结果或医生反馈。",
+          "item_type": "screening",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "development_screening",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 40,
+          "due_rule_json": {
+            "age_anchor": "9_month"
+          },
+          "details_json": {
+            "parent_task": "在9月龄儿保时核对是否完成发育筛查，保存结果或医生反馈。",
+            "source_basis": "healthychildren",
+            "category": "development_screening",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "9m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "well_visit_12_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_12_months",
+          "title": "准备并完成12月龄儿科/儿保随访",
+          "title": "准备并完成12月龄儿科/儿保随访",
+          "description": "带饮食、杯子、睡眠、牙齿、爬行/站立、语言、社交和接种记录。",
+          "item_type": "well_visit",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 41,
+          "due_rule_json": {
+            "age_anchor": "12_month"
+          },
+          "details_json": {
+            "parent_task": "带饮食、杯子、睡眠、牙齿、爬行/站立、语言、社交和接种记录。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "12m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "cup_feeding_transition",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "cup_feeding_transition",
+          "title": "练习杯子和更丰富的家庭食物过渡",
+          "title": "练习杯子和更丰富的家庭食物过渡",
+          "description": "记录杯子练习、辅食质地变化、吞咽/呛咳、过敏或便便变化。",
+          "item_type": "feeding_plan",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 42,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 8,
+              "end_months": 12
+            }
+          },
+          "details_json": {
+            "parent_task": "记录杯子练习、辅食质地变化、吞咽/呛咳、过敏或便便变化。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "8-12m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "teeth_brushing_questions",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "teeth_brushing_questions",
+          "title": "记录牙齿萌出和刷牙/看牙问题",
+          "title": "记录牙齿萌出和刷牙/看牙问题",
+          "description": "记录出牙、清洁方式、夜奶/龋齿风险问题；儿保时询问牙科建议。",
+          "item_type": "custom",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "oral_health",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 43,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 8,
+              "end_months": 12
+            }
+          },
+          "details_json": {
+            "parent_task": "记录出牙、清洁方式、夜奶/龋齿风险问题；儿保时询问牙科建议。",
+            "source_basis": "aap_book",
+            "category": "oral_health",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "8-12m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "development_obs_8_12m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "development_obs_8_12m",
+          "title": "记录8–12月龄发育观察",
+          "title": "记录8–12月龄发育观察",
+          "description": "观察爬/扶站/坐、手指精细动作、名字反应、重复音节、找藏起来的物体、分离焦虑。",
+          "item_type": "custom",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 44,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 8,
+              "end_months": 12
+            }
+          },
+          "details_json": {
+            "parent_task": "观察爬/扶站/坐、手指精细动作、名字反应、重复音节、找藏起来的物体、分离焦虑。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "8-12m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "childproofing_mobile_baby",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "childproofing_mobile_baby",
+          "title": "完成会爬会扶站后的全屋安全升级",
+          "title": "完成会爬会扶站后的全屋安全升级",
+          "description": "检查插座、柜门、药品清洁剂、热源、家具固定、小物件、楼梯/门栏、水源。",
+          "item_type": "safety",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 45,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 8,
+              "end_months": 12
+            }
+          },
+          "details_json": {
+            "parent_task": "检查插座、柜门、药品清洁剂、热源、家具固定、小物件、楼梯/门栏、水源。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "8-12m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "discipline_redirect_start",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "discipline_redirect_start",
+          "title": "统一“不打不吼、转移和限制”的早期规则",
+          "title": "统一“不打不吼、转移和限制”的早期规则",
+          "description": "对危险行为用简短限制和转移注意；家庭成员保持一致。",
+          "item_type": "custom",
+          "phase": "infant_8_12m",
+          "source_phase": "infant_8_12m",
+          "category": "behavior",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "low",
+          "priority_code": "P2",
+          "sort_order": 46,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 8,
+              "end_months": 12
+            }
+          },
+          "details_json": {
+            "parent_task": "对危险行为用简短限制和转移注意；家庭成员保持一致。",
+            "source_basis": "aap_book",
+            "category": "behavior",
+            "activation": "recommended",
+            "priority_code": "P2",
+            "trigger_label": "8-12m",
+            "source_phase": "infant_8_12m"
+          }
+        },
+        {
+          "key": "well_visit_15_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_15_months",
+          "title": "准备并完成15月龄儿科/儿保随访",
+          "title": "准备并完成15月龄儿科/儿保随访",
+          "description": "带饮食、睡眠、走路/手部动作、语言、情绪、安全和接种本。",
+          "item_type": "well_visit",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 47,
+          "due_rule_json": {
+            "age_anchor": "15_month"
+          },
+          "details_json": {
+            "parent_task": "带饮食、睡眠、走路/手部动作、语言、情绪、安全和接种本。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "15m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "well_visit_18_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_18_months",
+          "title": "准备并完成18月龄儿科/儿保随访",
+          "title": "准备并完成18月龄儿科/儿保随访",
+          "description": "准备发展筛查、自闭症筛查、语言、情绪、饮食、睡眠和如厕准备问题。",
+          "item_type": "well_visit",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 48,
+          "due_rule_json": {
+            "age_anchor": "18_month"
+          },
+          "details_json": {
+            "parent_task": "准备发展筛查、自闭症筛查、语言、情绪、饮食、睡眠和如厕准备问题。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "18m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "screening_18m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "screening_18m",
+          "title": "记录18月龄发育筛查和自闭症筛查是否完成",
+          "title": "记录18月龄发育筛查和自闭症筛查是否完成",
+          "description": "保存筛查结果；若医生建议转诊或复查，转成自定义医生任务。",
+          "item_type": "screening",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "development_screening",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 49,
+          "due_rule_json": {
+            "age_anchor": "18_month"
+          },
+          "details_json": {
+            "parent_task": "保存筛查结果；若医生建议转诊或复查，转成自定义医生任务。",
+            "source_basis": "healthychildren",
+            "category": "development_screening",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "18m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "nutrition_transition_1y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "nutrition_transition_1y",
+          "title": "复盘1岁后饮食与奶量结构",
+          "title": "复盘1岁后饮食与奶量结构",
+          "description": "记录家庭食物、奶/水/果汁、挑食、进餐节律；把担心点带去儿保。",
+          "item_type": "feeding_plan",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 50,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 12,
+              "end_months": 18
+            }
+          },
+          "details_json": {
+            "parent_task": "记录家庭食物、奶/水/果汁、挑食、进餐节律；把担心点带去儿保。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "12-18m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "toilet_readiness_only",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "toilet_readiness_only",
+          "title": "只观察如厕准备，不强推训练",
+          "title": "只观察如厕准备，不强推训练",
+          "description": "记录是否能表达、能短时保持干爽、对便盆有兴趣；不到准备阶段不生成训练任务。",
+          "item_type": "custom",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "toilet",
+          "activation": "reference",
+          "source_basis": "aap_book",
+          "priority": "low",
+          "priority_code": "P2",
+          "sort_order": 51,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 12,
+              "end_months": 18
+            }
+          },
+          "details_json": {
+            "parent_task": "记录是否能表达、能短时保持干爽、对便盆有兴趣；不到准备阶段不生成训练任务。",
+            "source_basis": "aap_book",
+            "category": "toilet",
+            "activation": "reference",
+            "priority_code": "P2",
+            "trigger_label": "12-18m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "tantrum_response_rule",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "tantrum_response_rule",
+          "title": "统一发脾气/咬人/抢东西的家庭应对规则",
+          "title": "统一发脾气/咬人/抢东西的家庭应对规则",
+          "description": "提前写好一致规则：保证安全、简短语言、转移注意、事后复盘。",
+          "item_type": "custom",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "behavior",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 52,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 12,
+              "end_months": 24
+            }
+          },
+          "details_json": {
+            "parent_task": "提前写好一致规则：保证安全、简短语言、转移注意、事后复盘。",
+            "source_basis": "aap_book",
+            "category": "behavior",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "12-24m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "safety_one_year_old",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safety_one_year_old",
+          "title": "完成1岁阶段睡眠、玩具、水、车、居家、户外安全检查",
+          "title": "完成1岁阶段睡眠、玩具、水、车、居家、户外安全检查",
+          "description": "会走和探索增多，重点检查水源、药品、清洁剂、小物件、车内和户外风险。",
+          "item_type": "safety",
+          "phase": "toddler_12_18m",
+          "source_phase": "toddler_12_18m",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 53,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 12,
+              "end_months": 18
+            }
+          },
+          "details_json": {
+            "parent_task": "会走和探索增多，重点检查水源、药品、清洁剂、小物件、车内和户外风险。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "12-18m",
+            "source_phase": "toddler_12_18m"
+          }
+        },
+        {
+          "key": "well_visit_24_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_24_months",
+          "title": "准备并完成24月龄儿科/儿保随访",
+          "title": "准备并完成24月龄儿科/儿保随访",
+          "description": "带语言、社交、动作、饮食、睡眠、如厕、行为和接种记录。",
+          "item_type": "well_visit",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 54,
+          "due_rule_json": {
+            "age_anchor": "24_month"
+          },
+          "details_json": {
+            "parent_task": "带语言、社交、动作、饮食、睡眠、如厕、行为和接种记录。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "24m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "autism_screening_24m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "autism_screening_24m",
+          "title": "记录24月龄自闭症筛查是否完成",
+          "title": "记录24月龄自闭症筛查是否完成",
+          "description": "保存筛查结果；若医生建议进一步评估，转成医生任务。",
+          "item_type": "screening",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "development_screening",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 55,
+          "due_rule_json": {
+            "age_anchor": "24_month"
+          },
+          "details_json": {
+            "parent_task": "保存筛查结果；若医生建议进一步评估，转成医生任务。",
+            "source_basis": "healthychildren",
+            "category": "development_screening",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "24m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "language_social_obs_2y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "language_social_obs_2y",
+          "title": "记录2岁前后语言与社交观察",
+          "title": "记录2岁前后语言与社交观察",
+          "description": "观察是否能理解简单指令、表达需求、指物、模仿、与照护者互动；担心时问医生。",
+          "item_type": "custom",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 56,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 18,
+              "end_months": 24
+            }
+          },
+          "details_json": {
+            "parent_task": "观察是否能理解简单指令、表达需求、指物、模仿、与照护者互动；担心时问医生。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "18-24m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "toilet_readiness_2y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "toilet_readiness_2y",
+          "title": "复盘是否进入如厕训练窗口",
+          "title": "复盘是否进入如厕训练窗口",
+          "description": "只在准备信号出现时开始；记录便盆、排便规律、抗拒程度和家庭执行成本。",
+          "item_type": "custom",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "toilet",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 57,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 18,
+              "end_months": 30
+            }
+          },
+          "details_json": {
+            "parent_task": "只在准备信号出现时开始；记录便盆、排便规律、抗拒程度和家庭执行成本。",
+            "source_basis": "aap_book",
+            "category": "toilet",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "18-30m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "sleep_discipline_2y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "sleep_discipline_2y",
+          "title": "复盘2岁阶段睡眠和规则执行",
+          "title": "复盘2岁阶段睡眠和规则执行",
+          "description": "记录夜醒、睡前流程、边界测试、发脾气触发点和有效方法。",
+          "item_type": "custom",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "sleep_behavior",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 58,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 18,
+              "end_months": 24
+            }
+          },
+          "details_json": {
+            "parent_task": "记录夜醒、睡前流程、边界测试、发脾气触发点和有效方法。",
+            "source_basis": "aap_book",
+            "category": "sleep_behavior",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "18-24m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "dental_hygiene_2y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "dental_hygiene_2y",
+          "title": "建立2岁口腔护理和牙科随访记录",
+          "title": "建立2岁口腔护理和牙科随访记录",
+          "description": "记录刷牙、含糖饮品、夜奶、牙齿问题和牙科建议。",
+          "item_type": "custom",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "oral_health",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 59,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 18,
+              "end_months": 24
+            }
+          },
+          "details_json": {
+            "parent_task": "记录刷牙、含糖饮品、夜奶、牙齿问题和牙科建议。",
+            "source_basis": "aap_book",
+            "category": "oral_health",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "18-24m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "safety_two_year_old",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safety_two_year_old",
+          "title": "完成2岁阶段跌落、烫伤、中毒、乘车安全检查",
+          "title": "完成2岁阶段跌落、烫伤、中毒、乘车安全检查",
+          "description": "重点检查攀爬、厨房、药品/清洁剂、窗户、座椅和户外风险。",
+          "item_type": "safety",
+          "phase": "toddler_18_24m",
+          "source_phase": "toddler_18_24m",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 60,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 18,
+              "end_months": 24
+            }
+          },
+          "details_json": {
+            "parent_task": "重点检查攀爬、厨房、药品/清洁剂、窗户、座椅和户外风险。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "18-24m",
+            "source_phase": "toddler_18_24m"
+          }
+        },
+        {
+          "key": "well_visit_30_months",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_30_months",
+          "title": "准备并完成30月龄儿科/儿保随访",
+          "title": "准备并完成30月龄儿科/儿保随访",
+          "description": "带发育、语言、行为、如厕、睡眠、饮食和家庭担心点。",
+          "item_type": "well_visit",
+          "phase": "toddler_24_30m",
+          "source_phase": "toddler_24_30m",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 61,
+          "due_rule_json": {
+            "age_anchor": "30_month"
+          },
+          "details_json": {
+            "parent_task": "带发育、语言、行为、如厕、睡眠、饮食和家庭担心点。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "30m",
+            "source_phase": "toddler_24_30m"
+          }
+        },
+        {
+          "key": "developmental_screening_30m",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "developmental_screening_30m",
+          "title": "记录30月龄发育筛查是否完成",
+          "title": "记录30月龄发育筛查是否完成",
+          "description": "保存筛查结果；关注语言、运动、社交和行为建议。",
+          "item_type": "screening",
+          "phase": "toddler_24_30m",
+          "source_phase": "toddler_24_30m",
+          "category": "development_screening",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 62,
+          "due_rule_json": {
+            "age_anchor": "30_month"
+          },
+          "details_json": {
+            "parent_task": "保存筛查结果；关注语言、运动、社交和行为建议。",
+            "source_basis": "healthychildren",
+            "category": "development_screening",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "30m",
+            "source_phase": "toddler_24_30m"
+          }
+        },
+        {
+          "key": "toilet_training_if_ready",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "toilet_training_if_ready",
+          "title": "如厕训练：仅在准备充分时启用",
+          "title": "如厕训练：仅在准备充分时启用",
+          "description": "若已出现准备信号，可启用如厕训练子清单；否则保持观察。",
+          "item_type": "custom",
+          "phase": "toddler_24_30m",
+          "source_phase": "toddler_24_30m",
+          "category": "toilet",
+          "activation": "manual_optional",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 63,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 24,
+              "end_months": 36
+            }
+          },
+          "details_json": {
+            "parent_task": "若已出现准备信号，可启用如厕训练子清单；否则保持观察。",
+            "source_basis": "aap_book",
+            "category": "toilet",
+            "activation": "manual_optional",
+            "priority_code": "P1",
+            "trigger_label": "24-36m",
+            "source_phase": "toddler_24_30m"
+          }
+        },
+        {
+          "key": "nutrition_picky_eating_review",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "nutrition_picky_eating_review",
+          "title": "复盘挑食、零食、饮料和进餐边界",
+          "title": "复盘挑食、零食、饮料和进餐边界",
+          "description": "记录一周饮食结构、挑食触发、零食/含糖饮品和家庭餐桌规则。",
+          "item_type": "feeding_plan",
+          "phase": "toddler_24_30m",
+          "source_phase": "toddler_24_30m",
+          "category": "feeding",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 64,
+          "due_rule_json": {
+            "age_window": {
+              "start_months": 24,
+              "end_months": 30
+            }
+          },
+          "details_json": {
+            "parent_task": "记录一周饮食结构、挑食触发、零食/含糖饮品和家庭餐桌规则。",
+            "source_basis": "aap_book",
+            "category": "feeding",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "24-30m",
+            "source_phase": "toddler_24_30m"
+          }
+        },
+        {
+          "key": "well_visit_3_years",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_3_years",
+          "title": "准备并完成3岁年度儿科/儿保随访",
+          "title": "准备并完成3岁年度儿科/儿保随访",
+          "description": "带语言、运动、社交、情绪、睡眠、饮食、如厕、幼儿园适应和安全问题。",
+          "item_type": "well_visit",
+          "phase": "toddler_3y",
+          "source_phase": "toddler_3y",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 65,
+          "due_rule_json": {
+            "age_anchor": "3_year"
+          },
+          "details_json": {
+            "parent_task": "带语言、运动、社交、情绪、睡眠、饮食、如厕、幼儿园适应和安全问题。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "3y",
+            "source_phase": "toddler_3y"
+          }
+        },
+        {
+          "key": "preschool_readiness_3y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "preschool_readiness_3y",
+          "title": "评估幼儿园/早教适应准备",
+          "title": "评估幼儿园/早教适应准备",
+          "description": "记录分离焦虑、同伴互动、语言表达、自理能力、作息和过敏/健康信息。",
+          "item_type": "custom",
+          "phase": "toddler_3y",
+          "source_phase": "toddler_3y",
+          "category": "education",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 66,
+          "due_rule_json": {
+            "age_anchor": "3_year"
+          },
+          "details_json": {
+            "parent_task": "记录分离焦虑、同伴互动、语言表达、自理能力、作息和过敏/健康信息。",
+            "source_basis": "aap_book",
+            "category": "education",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "3y",
+            "source_phase": "toddler_3y"
+          }
+        },
+        {
+          "key": "development_obs_3y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "development_obs_3y",
+          "title": "记录3岁发育观察",
+          "title": "记录3岁发育观察",
+          "description": "观察对话、别人是否多数能听懂、跑跳攀爬、画画/积木、假装游戏、轮流和情绪调节。",
+          "item_type": "custom",
+          "phase": "toddler_3y",
+          "source_phase": "toddler_3y",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 67,
+          "due_rule_json": {
+            "age_anchor": "3_year"
+          },
+          "details_json": {
+            "parent_task": "观察对话、别人是否多数能听懂、跑跳攀爬、画画/积木、假装游戏、轮流和情绪调节。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "3y",
+            "source_phase": "toddler_3y"
+          }
+        },
+        {
+          "key": "bedwetting_reference_3y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "bedwetting_reference_3y",
+          "title": "夜尿/尿床：作为观察项，不默认干预",
+          "title": "夜尿/尿床：作为观察项，不默认干预",
+          "description": "尿床可有正常波动；记录频率和伴随症状，担心时问医生。",
+          "item_type": "custom",
+          "phase": "toddler_3y",
+          "source_phase": "toddler_3y",
+          "category": "toilet",
+          "activation": "reference",
+          "source_basis": "aap_book",
+          "priority": "low",
+          "priority_code": "P2",
+          "sort_order": 68,
+          "due_rule_json": {
+            "age_anchor": "3_year"
+          },
+          "details_json": {
+            "parent_task": "尿床可有正常波动；记录频率和伴随症状，担心时问医生。",
+            "source_basis": "aap_book",
+            "category": "toilet",
+            "activation": "reference",
+            "priority_code": "P2",
+            "trigger_label": "3y",
+            "source_phase": "toddler_3y"
+          }
+        },
+        {
+          "key": "discipline_sleep_3y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "discipline_sleep_3y",
+          "title": "复盘3岁纪律、睡眠和情绪边界",
+          "title": "复盘3岁纪律、睡眠和情绪边界",
+          "description": "记录睡前拖延、噩梦/夜惊、发脾气、家庭规则是否一致。",
+          "item_type": "custom",
+          "phase": "toddler_3y",
+          "source_phase": "toddler_3y",
+          "category": "sleep_behavior",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 69,
+          "due_rule_json": {
+            "age_anchor": "3_year"
+          },
+          "details_json": {
+            "parent_task": "记录睡前拖延、噩梦/夜惊、发脾气、家庭规则是否一致。",
+            "source_basis": "aap_book",
+            "category": "sleep_behavior",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "3y",
+            "source_phase": "toddler_3y"
+          }
+        },
+        {
+          "key": "safety_three_year_old",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safety_three_year_old",
+          "title": "完成3岁跌落、烫伤、乘车、水和中毒/窒息安全检查",
+          "title": "完成3岁跌落、烫伤、乘车、水和中毒/窒息安全检查",
+          "description": "重点检查户外、厨房、水源、车座、药品清洁剂和小物件。",
+          "item_type": "safety",
+          "phase": "toddler_3y",
+          "source_phase": "toddler_3y",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 70,
+          "due_rule_json": {
+            "age_anchor": "3_year"
+          },
+          "details_json": {
+            "parent_task": "重点检查户外、厨房、水源、车座、药品清洁剂和小物件。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "3y",
+            "source_phase": "toddler_3y"
+          }
+        },
+        {
+          "key": "well_visit_4_years",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_4_years",
+          "title": "准备并完成4岁年度儿科/儿保随访",
+          "title": "准备并完成4岁年度儿科/儿保随访",
+          "description": "带幼儿园表现、语言、运动、社交、睡眠、饮食、安全和接种记录。",
+          "item_type": "well_visit",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 71,
+          "due_rule_json": {
+            "age_anchor": "4_year"
+          },
+          "details_json": {
+            "parent_task": "带幼儿园表现、语言、运动、社交、睡眠、饮食、安全和接种记录。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "4y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "well_visit_5_years",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_5_years",
+          "title": "准备并完成5岁年度儿科/儿保随访",
+          "title": "准备并完成5岁年度儿科/儿保随访",
+          "description": "带入学准备、视听/牙齿/营养/运动、社交情绪和安全问题。",
+          "item_type": "well_visit",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 72,
+          "due_rule_json": {
+            "age_anchor": "5_year"
+          },
+          "details_json": {
+            "parent_task": "带入学准备、视听/牙齿/营养/运动、社交情绪和安全问题。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "5y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "kindergarten_readiness",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "kindergarten_readiness",
+          "title": "准备幼儿园大班/入学衔接清单",
+          "title": "准备幼儿园大班/入学衔接清单",
+          "description": "记录自理能力、规则感、轮流、表达需求、听故事回答问题、健康证明/接种证需求。",
+          "item_type": "custom",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "education",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 73,
+          "due_rule_json": {
+            "age_window": {
+              "start_years": 4,
+              "end_years": 5
+            }
+          },
+          "details_json": {
+            "parent_task": "记录自理能力、规则感、轮流、表达需求、听故事回答问题、健康证明/接种证需求。",
+            "source_basis": "aap_book",
+            "category": "education",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-5y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "development_obs_4_5y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "development_obs_4_5y",
+          "title": "记录4–5岁发育观察",
+          "title": "记录4–5岁发育观察",
+          "description": "观察假装游戏、讲故事、对话、精细动作、身体协调、同伴游戏、遵守规则和轮流。",
+          "item_type": "custom",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "development",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 74,
+          "due_rule_json": {
+            "age_window": {
+              "start_years": 4,
+              "end_years": 5
+            }
+          },
+          "details_json": {
+            "parent_task": "观察假装游戏、讲故事、对话、精细动作、身体协调、同伴游戏、遵守规则和轮流。",
+            "source_basis": "aap_book",
+            "category": "development",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-5y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "healthy_lifestyle_review",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "healthy_lifestyle_review",
+          "title": "复盘4–5岁健康生活方式",
+          "title": "复盘4–5岁健康生活方式",
+          "description": "记录饮食、运动、睡眠、屏幕使用、户外活动和家庭作息。",
+          "item_type": "custom",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "lifestyle",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 75,
+          "due_rule_json": {
+            "age_window": {
+              "start_years": 4,
+              "end_years": 5
+            }
+          },
+          "details_json": {
+            "parent_task": "记录饮食、运动、睡眠、屏幕使用、户外活动和家庭作息。",
+            "source_basis": "aap_book",
+            "category": "lifestyle",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-5y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "discipline_emotion_4_5y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "discipline_emotion_4_5y",
+          "title": "复盘4–5岁规则、情绪和社交冲突",
+          "title": "复盘4–5岁规则、情绪和社交冲突",
+          "description": "记录常见冲突、有效规则、奖励/后果是否一致、是否影响幼儿园生活。",
+          "item_type": "custom",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "behavior",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 76,
+          "due_rule_json": {
+            "age_window": {
+              "start_years": 4,
+              "end_years": 5
+            }
+          },
+          "details_json": {
+            "parent_task": "记录常见冲突、有效规则、奖励/后果是否一致、是否影响幼儿园生活。",
+            "source_basis": "aap_book",
+            "category": "behavior",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "4-5y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "safety_travel_4_5y",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "safety_travel_4_5y",
+          "title": "完成4–5岁安全与出行检查",
+          "title": "完成4–5岁安全与出行检查",
+          "description": "复查乘车、游泳/水边、骑车/头盔、户外、陌生动物、旅行用药与证件。",
+          "item_type": "safety",
+          "phase": "preschool_4_5y",
+          "source_phase": "preschool_4_5y",
+          "category": "safety",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 77,
+          "due_rule_json": {
+            "age_window": {
+              "start_years": 4,
+              "end_years": 5
+            }
+          },
+          "details_json": {
+            "parent_task": "复查乘车、游泳/水边、骑车/头盔、户外、陌生动物、旅行用药与证件。",
+            "source_basis": "aap_book",
+            "category": "safety",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "4-5y",
+            "source_phase": "preschool_4_5y"
+          }
+        },
+        {
+          "key": "well_visit_6_years",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "well_visit_6_years",
+          "title": "准备并完成6岁年度体检/入学体检",
+          "title": "准备并完成6岁年度体检/入学体检",
+          "description": "带身高体重、视力听力/牙齿、睡眠、饮食、运动、学校适应、接种证和家长问题。",
+          "item_type": "well_visit",
+          "phase": "early_school_6y",
+          "source_phase": "early_school_6y",
+          "category": "well_visit",
+          "activation": "core_auto",
+          "source_basis": "healthychildren",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 78,
+          "due_rule_json": {
+            "age_anchor": "6_year"
+          },
+          "details_json": {
+            "parent_task": "带身高体重、视力听力/牙齿、睡眠、饮食、运动、学校适应、接种证和家长问题。",
+            "source_basis": "healthychildren",
+            "category": "well_visit",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "6y",
+            "source_phase": "early_school_6y"
+          }
+        },
+        {
+          "key": "school_entry_documents",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "school_entry_documents",
+          "title": "整理入学所需健康资料和接种记录",
+          "title": "整理入学所需健康资料和接种记录",
+          "description": "按学校/社区要求整理体检表、接种证、过敏/慢病说明、紧急联系人。",
+          "item_type": "admin",
+          "phase": "early_school_6y",
+          "source_phase": "early_school_6y",
+          "category": "records",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 79,
+          "due_rule_json": {
+            "age_anchor": "6_year"
+          },
+          "details_json": {
+            "parent_task": "按学校/社区要求整理体检表、接种证、过敏/慢病说明、紧急联系人。",
+            "source_basis": "aap_book",
+            "category": "records",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "6y",
+            "source_phase": "early_school_6y"
+          }
+        },
+        {
+          "key": "six_year_vaccine_verify_only",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "six_year_vaccine_verify_only",
+          "title": "6岁接种安排：仅核对当地/医生计划并记录",
+          "title": "6岁接种安排：仅核对当地/医生计划并记录",
+          "description": "不自动生成疫苗内容；中国现行百白破程序已有调整，必须以当地接种门诊/医生安排为准。",
+          "item_type": "vaccine",
+          "phase": "early_school_6y",
+          "source_phase": "early_school_6y",
+          "category": "vaccination_record",
+          "activation": "manual_optional",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 80,
+          "due_rule_json": {
+            "age_anchor": "6_year"
+          },
+          "details_json": {
+            "parent_task": "不自动生成疫苗内容；中国现行百白破程序已有调整，必须以当地接种门诊/医生安排为准。",
+            "source_basis": "aap_book",
+            "category": "vaccination_record",
+            "activation": "manual_optional",
+            "priority_code": "P1",
+            "trigger_label": "6y",
+            "source_phase": "early_school_6y"
+          }
+        },
+        {
+          "key": "doctor_question_list_before_visit",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "doctor_question_list_before_visit",
+          "title": "每次儿保前生成3–5个问题清单",
+          "title": "每次儿保前生成3–5个问题清单",
+          "description": "根据最近记录生成：喂养/睡眠/排便/发育/安全/行为中最重要的3–5个问题。",
+          "item_type": "admin",
+          "phase": "prenatal",
+          "source_phase": "cross_cutting",
+          "category": "visit_prep",
+          "activation": "recommended",
+          "source_basis": "aap_book",
+          "priority": "normal",
+          "priority_code": "P1",
+          "sort_order": 81,
+          "due_rule_json": {
+            "trigger": "all"
+          },
+          "details_json": {
+            "parent_task": "根据最近记录生成：喂养/睡眠/排便/发育/安全/行为中最重要的3–5个问题。",
+            "source_basis": "aap_book",
+            "category": "visit_prep",
+            "activation": "recommended",
+            "priority_code": "P1",
+            "trigger_label": "all",
+            "source_phase": "cross_cutting"
+          }
+        },
+        {
+          "key": "record_growth_after_visit",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "record_growth_after_visit",
+          "title": "每次体检后记录身高、体重、头围和医生建议",
+          "title": "每次体检后记录身高、体重、头围和医生建议",
+          "description": "录入测量值、百分位/医生说明、下次复查或转诊计划。",
+          "item_type": "admin",
+          "phase": "prenatal",
+          "source_phase": "cross_cutting",
+          "category": "medical_record",
+          "activation": "core_auto",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 82,
+          "due_rule_json": {
+            "trigger": "all"
+          },
+          "details_json": {
+            "parent_task": "录入测量值、百分位/医生说明、下次复查或转诊计划。",
+            "source_basis": "aap_book",
+            "category": "medical_record",
+            "activation": "core_auto",
+            "priority_code": "P0",
+            "trigger_label": "all",
+            "source_phase": "cross_cutting"
+          }
+        },
+        {
+          "key": "no_auto_diagnosis_rule",
+          "template_code": "aap_early_childhood_care_v1",
+          "template_version": "1.0.0",
+          "template_item_key": "no_auto_diagnosis_rule",
+          "title": "健康提醒只做风险提示，不做诊断或用药建议",
+          "title": "健康提醒只做风险提示，不做诊断或用药建议",
+          "description": "Checklist 可提醒记录和就医阈值，但不得输出诊断、治疗、剂量或替代医生建议。",
+          "item_type": "safety",
+          "phase": "prenatal",
+          "source_phase": "cross_cutting",
+          "category": "safety_rule",
+          "activation": "reference",
+          "source_basis": "aap_book",
+          "priority": "high",
+          "priority_code": "P0",
+          "sort_order": 83,
+          "due_rule_json": {
+            "trigger": "all"
+          },
+          "details_json": {
+            "parent_task": "Checklist 可提醒记录和就医阈值，但不得输出诊断、治疗、剂量或替代医生建议。",
+            "source_basis": "aap_book",
+            "category": "safety_rule",
+            "activation": "reference",
+            "priority_code": "P0",
+            "trigger_label": "all",
+            "source_phase": "cross_cutting"
+          }
+        }
+      ]
+    }
+  ]
+}

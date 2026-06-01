@@ -1,0 +1,16 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow deterministic catalog identifiers that are not secrets."
+regexes = [
+  '''"key":\s*"[a-z0-9_:-]+"''',
+  '''"template_item_key":\s*"[a-z0-9_:-]+"''',
+  '''item\.(?:template_item_)?key\s*===\s*"[a-z0-9_:-]+"'''
+]
+paths = [
+  '''src/server/data/reference-targets\.json''',
+  '''src/server/data/checklist-templates\.json''',
+  '''src/client/utils/reference-targets\.ts''',
+  '''tests/server/checklists-machine-export\.test\.ts'''
+]

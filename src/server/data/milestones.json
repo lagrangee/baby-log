@@ -1,0 +1,56 @@
+{
+  "template_id": "milestones_v1",
+  "version": "1.0.0",
+  "frozen": true,
+  "items": [
+    {
+      "id": "ms_social_smile",
+      "milestone_type": "social",
+      "title": "First social smile",
+      "suggested_age_label": "Around 2 months",
+      "note_hint": "Record the date only; the app does not infer delays."
+    },
+    {
+      "id": "ms_head_control",
+      "milestone_type": "motor",
+      "title": "Steadier head control",
+      "suggested_age_label": "Around 2-4 months"
+    },
+    {
+      "id": "ms_roll_over",
+      "milestone_type": "motor",
+      "title": "First roll over",
+      "suggested_age_label": "Around 4-6 months"
+    },
+    {
+      "id": "ms_sit_without_support",
+      "milestone_type": "motor",
+      "title": "Sits without support",
+      "suggested_age_label": "Around 6-9 months"
+    },
+    {
+      "id": "ms_crawl",
+      "milestone_type": "motor",
+      "title": "Starts crawling",
+      "suggested_age_label": "Around 8-10 months"
+    },
+    {
+      "id": "ms_pull_to_stand",
+      "milestone_type": "motor",
+      "title": "Pulls to stand",
+      "suggested_age_label": "Around 9-12 months"
+    },
+    {
+      "id": "ms_first_word",
+      "milestone_type": "language",
+      "title": "First meaningful word",
+      "suggested_age_label": "Around 9-15 months"
+    },
+    {
+      "id": "ms_independent_steps",
+      "milestone_type": "motor",
+      "title": "First independent steps",
+      "suggested_age_label": "Around 12-18 months"
+    }
+  ]
+}

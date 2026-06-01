@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Baby Log">
+  <defs>
+    <linearGradient id="card" x1="220" y1="118" x2="760" y2="932" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffdf3"/>
+      <stop offset="0.62" stop-color="#fbfbf0"/>
+      <stop offset="1" stop-color="#eef8f1"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="168" y1="710" x2="880" y2="850" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#cfe6dc"/>
+      <stop offset="1" stop-color="#e2f1e7"/>
+    </linearGradient>
+    <filter id="soft-shadow" x="-16%" y="-16%" width="132%" height="132%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0b4c43" flood-opacity="0.22"/>
+    </filter>
+    <filter id="card-shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#35564e" flood-opacity="0.12"/>
+    </filter>
+    <clipPath id="rounded">
+      <rect x="80" y="80" width="864" height="864" rx="156"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <rect x="80" y="80" width="864" height="864" rx="156" fill="url(#card)" filter="url(#card-shadow)"/>
+
+  <g clip-path="url(#rounded)">
+    <circle cx="690" cy="710" r="116" fill="#ffe5b8" opacity="0.92"/>
+    <circle cx="792" cy="790" r="116" fill="#f7d79f" opacity="0.72"/>
+    <path d="M92 804 C240 782 316 704 430 686 C560 666 612 760 736 756 C842 752 884 704 960 724 L960 944 L92 944 Z" fill="url(#hill)"/>
+    <path d="M70 828 C214 818 304 766 414 766 C536 766 598 824 736 824 C842 824 900 790 970 798 L970 952 L70 952 Z" fill="#ddecdf"/>
+    <path d="M80 836 C238 826 330 800 466 820 C604 840 684 824 808 820 C878 818 930 830 970 842" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" opacity="0.86"/>
+    <path d="M70 866 C236 850 342 834 490 860 C638 886 730 856 884 862 C920 864 948 868 980 876" fill="none" stroke="#f8fffb" stroke-width="10" stroke-linecap="round" opacity="0.94"/>
+    <path d="M802 708 l12 -34" stroke="#f4c981" stroke-width="13" stroke-linecap="round"/>
+    <path d="M850 722 l28 -22" stroke="#f4c981" stroke-width="13" stroke-linecap="round"/>
+    <path d="M872 760 l31 -4" stroke="#f4c981" stroke-width="13" stroke-linecap="round"/>
+    <path d="M204 720 C226 716 238 728 246 742 C256 724 270 714 292 714" fill="none" stroke="#a9cec1" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <text
+    x="512"
+    y="718"
+    text-anchor="middle"
+    font-family="Inter, ui-sans-serif, system-ui, sans-serif"
+    font-size="620"
+    font-weight="900"
+    fill="#0f5c52"
+    filter="url(#soft-shadow)"
+  >B</text>
+</svg>
