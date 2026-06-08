@@ -2,7 +2,7 @@ import { useI18n } from "../i18n";
 
 const tabs = [
   { path: "/app", labelKey: "nav.record" },
-  { path: "/app/yesterday", labelKey: "nav.yesterday" },
+  { path: "/app/yesterday", labelKey: "nav.yesterday", hidden: true },
   { path: "/app/growth", labelKey: "nav.growth" },
   { path: "/app/timeline", labelKey: "nav.timeline" },
   { path: "/app/checklist", labelKey: "nav.checklist" },
@@ -18,7 +18,7 @@ export function BottomTabs({ activePath, onNavigate }: BottomTabsProps) {
   const { t } = useI18n();
   return (
     <nav className="tabs" aria-label="Primary navigation">
-      {tabs.map((tab) => (
+      {tabs.filter((tab) => !("hidden" in tab && tab.hidden)).map((tab) => (
         <a
           key={tab.path}
           href={tab.path}
