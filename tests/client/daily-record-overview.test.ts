@@ -83,6 +83,31 @@ describe("daily record overview trend charts", () => {
     expect(result.charts.flatMap((chart) => chart.bars).every((bar) => bar.heightPercent === 0)).toBe(true);
     expect(result.charts.find((chart) => chart.key === "weight")?.bars.map((bar) => bar.displayValue)).toEqual(["—", "—"]);
   });
+
+  test("hides breastfeeding trend data from the home overview", () => {
+    const result = buildSevenDayTrendCharts(
+      [
+        summary({
+          date: "2026-05-09",
+          feed_breast_count: 3,
+          feed_bottle_count: 1,
+          bottle_breastmilk_ml_total: 90,
+          bottle_formula_ml_total: 30
+        }),
+        summary({
+          date: "2026-05-10",
+          feed_breast_count: 2,
+          feed_bottle_count: 4,
+          bottle_breastmilk_ml_total: 120,
+          bottle_formula_ml_total: 60
+        })
+      ],
+      { hideBreastfeeding: true }
+    );
+
+    expect(result.charts.map((chart) => chart.key)).toEqual(["feeding", "formula", "pee", "poop", "sleep", "weight", "length"]);
+    expect(result.charts.find((chart) => chart.key === "feeding")?.bars.map((bar) => bar.displayValue)).toEqual(["1", "4"]);
+  });
 });
 
 describe("read-only page tabs", () => {

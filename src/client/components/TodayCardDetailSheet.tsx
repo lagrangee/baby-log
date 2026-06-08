@@ -17,6 +17,7 @@ interface TodayCardDetailSheetProps<TEvent extends DisplayEventRecord> {
   loading?: boolean;
   error?: string;
   editable?: boolean;
+  hideBreastfeeding?: boolean;
   onClose: () => void;
   onRetry?: () => void;
   onEdit?: (event: TEvent) => void;
@@ -29,13 +30,14 @@ export function TodayCardDetailSheet<TEvent extends DisplayEventRecord>({
   loading = false,
   error = "",
   editable = false,
+  hideBreastfeeding = false,
   onClose,
   onRetry,
   onEdit
 }: TodayCardDetailSheetProps<TEvent>) {
   const { text: tx } = useI18n();
-  const events = day ? eventsForCard(slot, day.events) : [];
-  const lines = day ? cardDetailLines(slot, day.summary, timezone, events) : [];
+  const events = day ? eventsForCard(slot, day.events, { hideBreastfeeding }) : [];
+  const lines = day ? cardDetailLines(slot, day.summary, timezone, events, { hideBreastfeeding }) : [];
   return (
     <Sheet title={tx({ en: "{title} details", zh: "{title}明细" }, { title: cardTitle(slot) })} onClose={onClose}>
       {loading ? <p className="empty">{tx({ en: "Loading...", zh: "正在加载..." })}</p> : null}
@@ -102,16 +104,23 @@ const cardEventTypes: Record<TodaySummaryCardSlot, EventType[]> = {
   growth: ["growth_measurement"]
 };
 
-function eventsForCard<TEvent extends DisplayEventRecord>(slot: TodaySummaryCardSlot, events: TEvent[]): TEvent[] {
-  const allowed = cardEventTypes[slot];
+function eventsForCard<TEvent extends DisplayEventRecord>(slot: TodaySummaryCardSlot, events: TEvent[], options: { hideBreastfeeding?: boolean } = {}): TEvent[] {
+  const allowed = options.hideBreastfeeding && slot === "feeding" ? ["feed_bottle"] : cardEventTypes[slot];
   return events
     .filter((event) => allowed.includes(event.event_type))
     .sort((left, right) => (right.ended_at ?? right.occurred_at).localeCompare(left.ended_at ?? left.occurred_at));
 }
 
-function cardDetailLines(slot: TodaySummaryCardSlot, summary: TodaySummary, timezone: string, events: DisplayEventRecord[]): string[] {
+function cardDetailLines(slot: TodaySummaryCardSlot, summary: TodaySummary, timezone: string, events: DisplayEventRecord[], options: { hideBreastfeeding?: boolean } = {}): string[] {
   const last = (iso: string | null) => localizedText({ en: "Last {time}", zh: "上次 {time}" }, { time: formatRelativeTime(iso ?? latestEventIso(events), timezone) });
   if (slot === "feeding") {
+    if (options.hideBreastfeeding) {
+      return [
+        localizedText({ en: "Today {count} times", zh: "今日 {count} 次" }, { count: summary.feed_bottle_count }),
+        localizedText({ en: "Bottle {bottle} times", zh: "奶瓶 {bottle} 次" }, { bottle: summary.feed_bottle_count }),
+        last(summary.latest_bottle_at)
+      ];
+    }
     return [
       localizedText({ en: "Today {count} times", zh: "今日 {count} 次" }, { count: summary.feed_breast_count + summary.feed_bottle_count }),
       localizedText(

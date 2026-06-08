@@ -36,6 +36,7 @@ interface DailyRecordOverviewProps<TEvent extends DisplayEventRecord> {
   onCardSelect?: (slot: TodaySummaryCardSlot) => void;
   onEditEvent?: (event: TEvent) => void;
   onDeleteEvent?: (event: TEvent) => void;
+  hideBreastfeeding?: boolean;
 }
 
 export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
@@ -59,7 +60,8 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
   visibleSections = DEFAULT_OVERVIEW_SECTIONS,
   onCardSelect,
   onEditEvent,
-  onDeleteEvent
+  onDeleteEvent,
+  hideBreastfeeding = false
 }: DailyRecordOverviewProps<TEvent>) {
   const { text: tx } = useI18n();
   const timezone = profile.timezone;
@@ -83,18 +85,20 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
       {sectionSet.has("activeSessions") ? (
         <>
           <ActiveSessionCard session={openSleep} timezone={timezone} busy={busyType === "sleep_session"} onWake={onSleepAction} />
-          <ActiveSessionCard
-            session={openBreast}
-            timezone={timezone}
-            title={tx({ en: "Breastfeeding", zh: "亲喂进行中" })}
-            elapsedLabel={tx({ en: "for", zh: "已" })}
-            actionLabel={tx({ en: "End breastfeed", zh: "结束亲喂" })}
-            busy={busyType === "feed_breast"}
-            onWake={onBreastAction}
-          />
+          {hideBreastfeeding ? null : (
+            <ActiveSessionCard
+              session={openBreast}
+              timezone={timezone}
+              title={tx({ en: "Breastfeeding", zh: "亲喂进行中" })}
+              elapsedLabel={tx({ en: "for", zh: "已" })}
+              actionLabel={tx({ en: "End breastfeed", zh: "结束亲喂" })}
+              busy={busyType === "feed_breast"}
+              onWake={onBreastAction}
+            />
+          )}
         </>
       ) : null}
-      {sectionSet.has("summaryCards") ? <TodaySummaryCards summary={todaySummary} referenceTargets={referenceTargets} timezone={timezone} onCardSelect={onCardSelect} /> : null}
+      {sectionSet.has("summaryCards") ? <TodaySummaryCards summary={todaySummary} referenceTargets={referenceTargets} timezone={timezone} onCardSelect={onCardSelect} hideBreastfeeding={hideBreastfeeding} /> : null}
       {sectionSet.has("growthCurve") && growthCurve ? <GrowthCurvePanel growthCurve={growthCurve} /> : null}
       {sectionSet.has("notice") && todaySummary.system_flags.includes("temperature_high_neutral_notice") ? (
         <p className="notice">
@@ -111,21 +115,21 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
               <h2>{quickTitle}</h2>
               {quickMessage ? <span>{quickMessage}</span> : null}
             </div>
-            <QuickRecordGrid hasOpenSleep={Boolean(openSleep)} hasOpenBreast={Boolean(openBreast)} busyType={busyType} actions={quickActions} onAction={onQuickAction} />
+            <QuickRecordGrid hasOpenSleep={Boolean(openSleep)} hasOpenBreast={Boolean(openBreast)} busyType={busyType} actions={quickActions} hideBreastfeeding={hideBreastfeeding} onAction={onQuickAction} />
           </section>
         ) : (
-          <QuickRecordGrid hasOpenSleep={Boolean(openSleep)} hasOpenBreast={Boolean(openBreast)} busyType={busyType} actions={quickActions} onAction={onQuickAction} />
+          <QuickRecordGrid hasOpenSleep={Boolean(openSleep)} hasOpenBreast={Boolean(openBreast)} busyType={busyType} actions={quickActions} hideBreastfeeding={hideBreastfeeding} onAction={onQuickAction} />
         )
       ) : null}
-      {sectionSet.has("sevenDayTrend") && last7DaysSummary ? <SevenDayTrendSummary summaries={last7DaysSummary} /> : null}
+      {sectionSet.has("sevenDayTrend") && last7DaysSummary ? <SevenDayTrendSummary summaries={last7DaysSummary} hideBreastfeeding={hideBreastfeeding} /> : null}
       {sectionSet.has("recentEvents") ? <RecentEvents events={recentEvents} timezone={timezone} editable={eventsEditable} onEdit={onEditEvent} onDelete={onDeleteEvent} /> : null}
     </>
   );
 }
 
-function SevenDayTrendSummary({ summaries }: { summaries: TodaySummary[] }) {
+function SevenDayTrendSummary({ summaries, hideBreastfeeding }: { summaries: TodaySummary[]; hideBreastfeeding?: boolean }) {
   const { text: tx } = useI18n();
-  const trends = buildSevenDayTrendCharts(summaries);
+  const trends = buildSevenDayTrendCharts(summaries, { hideBreastfeeding });
   return (
     <section className="panel">
       <div className="section-head">
@@ -181,13 +185,13 @@ interface TrendMetricDefinition {
   scale?: "range";
 }
 
-export function buildSevenDayTrendCharts(summaries: TodaySummary[]): { charts: SevenDayTrendChart[] } {
+export function buildSevenDayTrendCharts(summaries: TodaySummary[], options: { hideBreastfeeding?: boolean } = {}): { charts: SevenDayTrendChart[] } {
   const ordered = [...summaries].sort((a, b) => a.date.localeCompare(b.date));
   const metrics: TrendMetricDefinition[] = [
     {
       key: "feeding",
       title: () => localizedText({ en: "Feeding count (times)", zh: "喂养次数(次)" }),
-      value: (summary) => summary.feed_breast_count + summary.feed_bottle_count,
+      value: (summary) => (options.hideBreastfeeding ? summary.feed_bottle_count : summary.feed_breast_count + summary.feed_bottle_count),
       display: (value) => `${value}`
     },
     {
@@ -237,7 +241,7 @@ export function buildSevenDayTrendCharts(summaries: TodaySummary[]): { charts: S
   ];
 
   return {
-    charts: metrics.map((metric) => buildTrendChart(metric, ordered))
+    charts: metrics.filter((metric) => !(options.hideBreastfeeding && metric.key === "breastmilk")).map((metric) => buildTrendChart(metric, ordered))
   };
 }
 

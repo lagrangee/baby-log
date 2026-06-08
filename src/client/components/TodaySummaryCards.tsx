@@ -10,13 +10,15 @@ interface TodaySummaryCardsProps {
   referenceTargets?: ReferenceTargetItem[];
   timezone?: string;
   onCardSelect?: (slot: TodaySummaryCardSlot) => void;
+  hideBreastfeeding?: boolean;
 }
 
 export type TodaySummaryCardSlot = "feeding" | "breast" | "pee" | "poop" | "sleep" | "temperature" | "bottle" | "growth";
 
-export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardSelect }: TodaySummaryCardsProps) {
+export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardSelect, hideBreastfeeding = false }: TodaySummaryCardsProps) {
   const { text: tx } = useI18n();
-  const feedCount = summary.feed_breast_count + summary.feed_bottle_count;
+  const feedCount = hideBreastfeeding ? summary.feed_bottle_count : summary.feed_breast_count + summary.feed_bottle_count;
+  const latestFeedingAt = hideBreastfeeding ? summary.latest_bottle_at : summary.latest_feeding_at;
   const recency = (iso: string | null) => formatCardRecency(iso, timezone);
   const cardProps = (slot: TodaySummaryCardSlot) => ({
     className: `summary-card summary-card-${slot}${onCardSelect ? " clickable" : ""}`,
@@ -37,15 +39,17 @@ export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardS
       <article {...cardProps("feeding")}>
         <span>{tx({ en: "Feeding", zh: "喂养" })}</span>
         <strong>{tx({ en: "{count} times", zh: "{count} 次" }, { count: feedCount })}</strong>
-        <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(summary.latest_feeding_at) })}</small>
+        <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(latestFeedingAt) })}</small>
         <SummaryReference targets={referenceTargets} slot="feeding" />
       </article>
-      <article {...cardProps("breast")}>
-        <span>{tx({ en: "Breastfeed", zh: "母乳" })}</span>
-        <strong>{formatDuration(summary.breast_minutes_total)}</strong>
-        <small>{tx({ en: "Left {left} · Right {right}", zh: "左 {left} · 右 {right}" }, { left: formatDuration(summary.breast_left_minutes_total), right: formatDuration(summary.breast_right_minutes_total) })}</small>
-        <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(summary.latest_breast_at) })}</small>
-      </article>
+      {hideBreastfeeding ? null : (
+        <article {...cardProps("breast")}>
+          <span>{tx({ en: "Breastfeed", zh: "母乳" })}</span>
+          <strong>{formatDuration(summary.breast_minutes_total)}</strong>
+          <small>{tx({ en: "Left {left} · Right {right}", zh: "左 {left} · 右 {right}" }, { left: formatDuration(summary.breast_left_minutes_total), right: formatDuration(summary.breast_right_minutes_total) })}</small>
+          <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(summary.latest_breast_at) })}</small>
+        </article>
+      )}
       <article {...cardProps("pee")}>
         <span>{tx({ en: "Pee", zh: "小便" })}</span>
         <strong>{tx({ en: "{count} times", zh: "{count} 次" }, { count: summary.pee_count })}</strong>
