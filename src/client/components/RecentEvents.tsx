@@ -12,9 +12,9 @@ interface RecentEventsProps<TEvent extends DisplayEventRecord> {
   onEdit?: (event: TEvent) => void;
 }
 
-export function RecentEvents<TEvent extends DisplayEventRecord>({ events, timezone, limit = 10, editable = true, onDelete, onEdit }: RecentEventsProps<TEvent>) {
+export function RecentEvents<TEvent extends DisplayEventRecord>({ events, timezone, limit, editable = true, onDelete, onEdit }: RecentEventsProps<TEvent>) {
   const { text: tx } = useI18n();
-  const items = events.slice(0, limit);
+  const items = limit == null ? events : events.slice(0, limit);
 
   if (!items.length) {
     return (
