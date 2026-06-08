@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { jsonResponse, noContent } from "../../src/server/http";
-import { nullableDate, timezoneOr } from "../../src/server/routes";
+import { nullableDate, recentEventsLimit, timezoneOr } from "../../src/server/routes";
 
 describe("HTTP response helpers", () => {
   test("JSON responses default to no-store", async () => {
@@ -43,5 +43,11 @@ describe("HTTP response helpers", () => {
     expect(() => nullableDate("2026-02-31")).toThrow("Date must be YYYY-MM-DD");
     expect(() => nullableDate("2026-99-99")).toThrow("Date must be YYYY-MM-DD");
     expect(() => nullableDate("not-a-date")).toThrow("Date must be YYYY-MM-DD");
+  });
+
+  test("bootstrap recent records limit keeps at least ten and expands to today's count", () => {
+    expect(recentEventsLimit(0)).toBe(10);
+    expect(recentEventsLimit(10)).toBe(10);
+    expect(recentEventsLimit(12)).toBe(12);
   });
 });

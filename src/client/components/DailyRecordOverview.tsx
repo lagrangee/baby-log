@@ -118,7 +118,7 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
         )
       ) : null}
       {sectionSet.has("sevenDayTrend") && last7DaysSummary ? <SevenDayTrendSummary summaries={last7DaysSummary} /> : null}
-      {sectionSet.has("recentEvents") ? <RecentEvents events={recentEvents} timezone={timezone} limit={10} editable={eventsEditable} onEdit={onEditEvent} onDelete={onDeleteEvent} /> : null}
+      {sectionSet.has("recentEvents") ? <RecentEvents events={recentEvents} timezone={timezone} editable={eventsEditable} onEdit={onEditEvent} onDelete={onDeleteEvent} /> : null}
     </>
   );
 }

@@ -14,7 +14,7 @@ import { getStableChildFacts, updateStableChildFacts } from "./services/stable-c
 import { buildPediatricSummary, buildStatusDay, buildStatusOverview, buildStatusRangeAnalytics, buildStatusTimeline, buildStatusTrends, buildTodayReferenceTargets } from "./services/status-service";
 import { normalizeLanguage } from "../shared/i18n";
 import type { Actor, Store } from "./types";
-import { isValidDateOnly } from "./utils/time";
+import { isValidDateOnly, localDateForTimezone } from "./utils/time";
 
 export async function handleApiRequest(request: Request, env: Env): Promise<Response | null> {
   const url = new URL(request.url);
@@ -77,13 +77,14 @@ export async function handleApiRequest(request: Request, env: Env): Promise<Resp
     await requireRole(request, env, store, "admin", nowIso);
     const profile = await store.getProfile();
     const checklistSections = await new ChecklistService(store).listSections(nowIso);
+    const todayEvents = await store.listEventsByLocalDate(localDateForTimezone(nowIso, profile.timezone));
     return jsonResponse({
       profile,
       stable_child_facts: await getStableChildFacts(store),
       growth_curve: await buildGrowthCurvePayload(store, nowIso),
       today_summary: await buildTodaySummary(store, nowIso),
       reference_targets: await buildTodayReferenceTargets(store, nowIso),
-      recent_events: await store.listEvents({ days: 7, limit: 10 }),
+      recent_events: await store.listEvents({ days: 7, limit: recentEventsLimit(todayEvents.length) }),
       open_checklists: checklistSections.current.slice(0, 10),
       seed_milestones: new MilestoneService(store).listSeedItems()
     });
@@ -692,4 +693,8 @@ export function timezoneOr(value: unknown, fallback: string): string | undefined
     throw httpError(400, "Invalid timezone");
   }
   return timezone;
+}
+
+export function recentEventsLimit(todayEventCount: number): number {
+  return Math.max(10, todayEventCount);
 }
