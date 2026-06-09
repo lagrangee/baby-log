@@ -38,7 +38,13 @@ export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardS
     <section className="summary-grid" aria-label={tx({ en: "Today summary", zh: "今日摘要" })}>
       <article {...cardProps("feeding")}>
         <span>{tx({ en: "Feeding", zh: "喂养" })}</span>
-        <strong>{tx({ en: "{count} times", zh: "{count} 次" }, { count: feedCount })}</strong>
+        <strong>{tx({ en: "{amount} ml · {count} times", zh: "{amount} ml · {count} 次" }, { amount: formatNumber(summary.bottle_ml_total), count: feedCount })}</strong>
+        <small>
+          {tx(
+            { en: "Formula {formula} ml · Expressed milk {breastmilk} ml", zh: "配方奶 {formula} ml · 母乳瓶喂 {breastmilk} ml" },
+            { formula: formatNumber(summary.bottle_formula_ml_total), breastmilk: formatNumber(summary.bottle_breastmilk_ml_total) }
+          )}
+        </small>
         <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(latestFeedingAt) })}</small>
         <SummaryReference targets={referenceTargets} slot="feeding" />
       </article>
