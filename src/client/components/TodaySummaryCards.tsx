@@ -11,11 +11,12 @@ interface TodaySummaryCardsProps {
   timezone?: string;
   onCardSelect?: (slot: TodaySummaryCardSlot) => void;
   hideBreastfeeding?: boolean;
+  hideBottleTotalCard?: boolean;
 }
 
 export type TodaySummaryCardSlot = "feeding" | "breast" | "pee" | "poop" | "sleep" | "temperature" | "bottle" | "growth";
 
-export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardSelect, hideBreastfeeding = false }: TodaySummaryCardsProps) {
+export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardSelect, hideBreastfeeding = false, hideBottleTotalCard = false }: TodaySummaryCardsProps) {
   const { text: tx } = useI18n();
   const feedCount = hideBreastfeeding ? summary.feed_bottle_count : summary.feed_breast_count + summary.feed_bottle_count;
   const latestFeedingAt = hideBreastfeeding ? summary.latest_bottle_at : summary.latest_feeding_at;
@@ -86,12 +87,14 @@ export function TodaySummaryCards({ summary, referenceTargets, timezone, onCardS
         <strong>{formatLatestGrowthValue(summary.growth)}</strong>
         <small>{tx({ en: "{measure} · Last {time}", zh: "{measure} · 上次 {time}" }, { measure: growthMeasureLabel(summary.growth.latest_measure_type), time: recency(summary.growth.latest_at) })}</small>
       </article>
-      <article {...cardProps("bottle")}>
-        <span>{tx({ en: "Bottle total", zh: "奶瓶总量" })}</span>
-        <strong>{formatNumber(summary.bottle_ml_total)} ml</strong>
-        <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(summary.latest_bottle_at) })}</small>
-        <SummaryReference targets={referenceTargets} slot="bottle" />
-      </article>
+      {hideBottleTotalCard ? null : (
+        <article {...cardProps("bottle")}>
+          <span>{tx({ en: "Bottle total", zh: "奶瓶总量" })}</span>
+          <strong>{formatNumber(summary.bottle_ml_total)} ml</strong>
+          <small>{tx({ en: "Last {time}", zh: "上次 {time}" }, { time: recency(summary.latest_bottle_at) })}</small>
+          <SummaryReference targets={referenceTargets} slot="bottle" />
+        </article>
+      )}
     </section>
   );
 }

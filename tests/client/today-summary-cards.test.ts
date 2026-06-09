@@ -25,6 +25,27 @@ describe("TodaySummaryCards", () => {
     expect(html).toContain(`<strong>180 ml ${divider} 3 times</strong>`);
     expect(html).toContain(`<small>Formula 120 ml ${divider} Expressed milk 60 ml</small>`);
   });
+
+  test("hides the standalone bottle total card when requested", () => {
+    const html = renderToStaticMarkup(
+      createElement(TodaySummaryCards, {
+        summary: summary({
+          feed_bottle_count: 3,
+          bottle_ml_total: 180,
+          bottle_formula_ml_total: 120,
+          bottle_breastmilk_ml_total: 60,
+          latest_bottle_at: "2026-06-08T10:00:00Z"
+        }),
+        timezone: "Asia/Shanghai",
+        hideBreastfeeding: true,
+        hideBottleTotalCard: true
+      })
+    );
+
+    expect(html).toContain("<span>Feeding</span>");
+    expect(html).toContain("<strong>180 ml");
+    expect(html).not.toContain("<span>Bottle total</span>");
+  });
 });
 
 function summary(patch: Partial<TodaySummary>): TodaySummary {

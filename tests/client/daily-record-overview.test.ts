@@ -1,7 +1,41 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vitest";
-import { buildSevenDayTrendCharts } from "../../src/client/components/DailyRecordOverview";
+import { buildSevenDayTrendCharts, DailyRecordOverview } from "../../src/client/components/DailyRecordOverview";
 import { READ_ONLY_TABS, readOnlyOverviewSectionsForTab } from "../../src/client/pages/ReadOnlyPage";
 import type { TodaySummary } from "../../src/client/types";
+
+describe("daily record overview summary cards", () => {
+  test("can hide the standalone bottle total card while keeping the feeding summary", () => {
+    const html = renderToStaticMarkup(
+      createElement(DailyRecordOverview, {
+        profile: {
+          child_name: "Baby",
+          child_birth_date: "2026-05-09",
+          due_date: null,
+          timezone: "Asia/Shanghai",
+          phase: "newborn_or_baby"
+        },
+        todaySummary: summary({
+          feed_bottle_count: 3,
+          bottle_ml_total: 180,
+          bottle_formula_ml_total: 120,
+          bottle_breastmilk_ml_total: 60
+        }),
+        recentEvents: [],
+        openSleep: null,
+        openBreast: null,
+        onLogout: () => undefined,
+        visibleSections: ["summaryCards"],
+        hideBottleTotalCard: true
+      })
+    );
+
+    expect(html).toContain("<span>Feeding</span>");
+    expect(html).toContain("<strong>180 ml");
+    expect(html).not.toContain("<span>Bottle total</span>");
+  });
+});
 
 describe("daily record overview trend charts", () => {
   test("builds elder-readable chart series from oldest to today with pee and poop separated", () => {

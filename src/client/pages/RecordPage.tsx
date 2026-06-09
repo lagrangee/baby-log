@@ -14,6 +14,7 @@ import { localInputValueInTimezone, nowIso, toIsoFromLocalInputInTimezone } from
 type SheetType = "breast" | "pee" | "poop" | "bottle" | "sleep_start" | "sleep_end" | "temperature" | "medicine" | "note" | "growth";
 const RECORD_OVERVIEW_SECTIONS = ["activeSessions", "summaryCards", "notice", "quickRecord", "sevenDayTrend", "recentEvents"] as const;
 const HIDE_HOME_BREASTFEEDING = true;
+const HIDE_RECORD_BOTTLE_TOTAL_CARD = true;
 
 interface RecordPageProps {
   onLogout: () => void;
@@ -248,6 +249,7 @@ export function RecordPage({ onLogout, onUnauthorized, showToast }: RecordPagePr
         onDeleteEvent={(event) => void deleteEvent(event)}
         visibleSections={RECORD_OVERVIEW_SECTIONS}
         hideBreastfeeding={HIDE_HOME_BREASTFEEDING}
+        hideBottleTotalCard={HIDE_RECORD_BOTTLE_TOTAL_CARD}
       />
 
       {sheetType ? (

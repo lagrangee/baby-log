@@ -37,6 +37,7 @@ interface DailyRecordOverviewProps<TEvent extends DisplayEventRecord> {
   onEditEvent?: (event: TEvent) => void;
   onDeleteEvent?: (event: TEvent) => void;
   hideBreastfeeding?: boolean;
+  hideBottleTotalCard?: boolean;
 }
 
 export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
@@ -61,7 +62,8 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
   onCardSelect,
   onEditEvent,
   onDeleteEvent,
-  hideBreastfeeding = false
+  hideBreastfeeding = false,
+  hideBottleTotalCard = false
 }: DailyRecordOverviewProps<TEvent>) {
   const { text: tx } = useI18n();
   const timezone = profile.timezone;
@@ -98,7 +100,7 @@ export function DailyRecordOverview<TEvent extends DisplayEventRecord>({
           )}
         </>
       ) : null}
-      {sectionSet.has("summaryCards") ? <TodaySummaryCards summary={todaySummary} referenceTargets={referenceTargets} timezone={timezone} onCardSelect={onCardSelect} hideBreastfeeding={hideBreastfeeding} /> : null}
+      {sectionSet.has("summaryCards") ? <TodaySummaryCards summary={todaySummary} referenceTargets={referenceTargets} timezone={timezone} onCardSelect={onCardSelect} hideBreastfeeding={hideBreastfeeding} hideBottleTotalCard={hideBottleTotalCard} /> : null}
       {sectionSet.has("growthCurve") && growthCurve ? <GrowthCurvePanel growthCurve={growthCurve} /> : null}
       {sectionSet.has("notice") && todaySummary.system_flags.includes("temperature_high_neutral_notice") ? (
         <p className="notice">
