@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { LanguageToggle, useI18n } from "../i18n";
 import type { ShowToast } from "../types";
+import { completeLoginNavigation } from "../utils/login-navigation";
 
 interface LoginPageProps {
   role: "admin" | "read";
@@ -22,7 +23,7 @@ export function LoginPage({ role, onNavigate, showToast }: LoginPageProps) {
         method: "POST",
         body: JSON.stringify({ password: String(formData.get("password") ?? "") })
       });
-      onNavigate(role === "admin" ? "/app" : "/read");
+      completeLoginNavigation(role, onNavigate);
     } catch (error) {
       showToast(error instanceof Error ? error.message : t("login.failed"));
     } finally {

@@ -4,6 +4,8 @@ import { handleApiRequest } from "./server/routes";
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     try {
+      const httpsRedirect = redirectPublicHttpToHttps(request);
+      if (httpsRedirect) return httpsRedirect;
       if (isBlockedByReadOnlyRemoteD1Probe(request, env)) {
         return jsonResponse(
           { error: "Read-only remote D1 probe rejects mutating requests" },
@@ -23,6 +25,23 @@ export default {
     }
   }
 };
+
+function redirectPublicHttpToHttps(request: Request): Response | null {
+  const url = new URL(request.url);
+  if (url.protocol !== "http:") return null;
+  if (isLocalHost(url.hostname)) return null;
+  url.protocol = "https:";
+  return new Response(null, {
+    status: 308,
+    headers: {
+      location: url.toString()
+    }
+  });
+}
+
+function isLocalHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+}
 
 function isBlockedByReadOnlyRemoteD1Probe(request: Request, env: Env): boolean {
   if (env.READ_ONLY_REMOTE_D1_PROBE !== "true") return false;

@@ -2,6 +2,19 @@ import { describe, expect, test } from "vitest";
 import worker from "../../src/worker";
 
 describe("worker asset fallback", () => {
+  test("redirects public HTTP requests to HTTPS before serving login pages", async () => {
+    const env = {
+      ASSETS: {
+        fetch: async () => new Response("should not reach assets")
+      }
+    } as unknown as Env;
+
+    const response = await worker.fetch(new Request("http://yubao.lagrangee.xyz/login/read", { headers: { accept: "text/html" } }), env);
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://yubao.lagrangee.xyz/login/read");
+  });
+
   test("read-only remote D1 probe mode rejects mutating requests before they reach the API", async () => {
     const env = {
       READ_ONLY_REMOTE_D1_PROBE: "true",
