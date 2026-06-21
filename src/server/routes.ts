@@ -625,7 +625,7 @@ async function login(request: Request, env: Env, store: Store, role: SessionRole
     throw httpError(401, "Invalid password");
   }
   const cookie = await createSessionCookie(role, await getSessionSecret(env, store, nowIso), nowIso);
-  return noContent({ "Set-Cookie": cookie.header });
+  return jsonResponse({ ok: true }, { headers: { "Set-Cookie": cookie.header } });
 }
 
 async function requireRole(request: Request, env: Env, store: Store, role: SessionRole, nowIso: string) {

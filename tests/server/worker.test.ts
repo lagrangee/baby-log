@@ -17,10 +17,10 @@ describe("worker asset fallback", () => {
     await expect(response.json()).resolves.toEqual({ error: "Read-only remote D1 probe rejects mutating requests" });
   });
 
-  test("read-only remote D1 probe mode allows admin login without writing setup metadata", async () => {
+  test("read-only remote D1 probe mode allows read login with a cookie-friendly response", async () => {
     const env = {
       READ_ONLY_REMOTE_D1_PROBE: "true",
-      ADMIN_PASSWORD: "local-secret",
+      READ_PASSWORD: "local-secret",
       SESSION_SECRET: "local-session-secret",
       DB: readOnlyMetaDb(),
       ASSETS: {
@@ -29,15 +29,16 @@ describe("worker asset fallback", () => {
     } as unknown as Env;
 
     const response = await worker.fetch(
-      new Request("https://example.com/api/session/admin/login", {
+      new Request("https://example.com/api/session/read/login", {
         method: "POST",
         body: JSON.stringify({ password: "local-secret" })
       }),
       env
     );
 
-    expect(response.status).toBe(204);
-    expect(response.headers.get("set-cookie")).toContain("yb_admin_session=");
+    expect(response.status).toBe(200);
+    expect(response.headers.get("set-cookie")).toContain("yb_read_session=");
+    await expect(response.json()).resolves.toEqual({ ok: true });
   });
 
   test("unknown machine paths return JSON 404 instead of the app shell", async () => {
