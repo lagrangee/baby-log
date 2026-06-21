@@ -15,8 +15,7 @@ import { TimelinePage } from "./pages/TimelinePage";
 import { TodayPage } from "./pages/TodayPage";
 import { YesterdayPage } from "./pages/YesterdayPage";
 import type { ShowToast, ToastState } from "./types";
-
-const root = createRoot(document.querySelector<HTMLDivElement>("#app")!);
+import { enforcePublicHttps } from "./utils/public-https";
 
 function App() {
   const [path, setPath] = useState(() => window.location.pathname + window.location.search);
@@ -101,12 +100,15 @@ function App() {
   );
 }
 
-root.render(
-  <StrictMode>
-    <LanguageProvider>
-      <App />
-    </LanguageProvider>
-  </StrictMode>
-);
+if (!enforcePublicHttps()) {
+  const root = createRoot(document.querySelector<HTMLDivElement>("#app")!);
+  root.render(
+    <StrictMode>
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
+    </StrictMode>
+  );
+}
 
 export { api };
