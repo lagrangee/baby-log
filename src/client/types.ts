@@ -589,6 +589,9 @@ export interface GrowthCurvePayload {
     standard: "who_child_growth_standards";
     dataset: string;
     dataset_url: string;
+    coverage: "birth_to_day_730";
+    coverage_label: string;
+    calculation: "lms";
     band: "p2_p98";
     band_label: string;
     note: string;

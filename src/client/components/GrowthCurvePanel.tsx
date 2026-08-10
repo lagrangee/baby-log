@@ -117,7 +117,7 @@ function statusMessage(item: GrowthCurveItem): string {
     return localizedText({ en: "Above the reference band; review with well-child care or a pediatrician.", zh: "高于参考区间；可结合儿保随访或儿科医生意见回顾。" });
   }
   if (item.status === "unavailable") {
-    return localizedText({ en: "The app currently provides WHO reference bands for 0-13 weeks after birth only.", zh: "当前仅提供出生后 0-13 周的 WHO 参考区间。" });
+    return localizedText({ en: "The app currently provides WHO reference bands from birth through day 730 (approximately 24 months).", zh: "当前提供出生至第 730 天（约 24 个月）的 WHO 参考区间。" });
   }
   return localizedText(
     {
@@ -135,6 +135,7 @@ function trendDirectionLabel(direction: NonNullable<GrowthCurveItem["personal_tr
   if (direction === "up") return localizedText({ en: "Clearly up; review together with consecutive records", zh: "明显上升；建议结合连续记录一起回顾" });
   if (direction === "down") return localizedText({ en: "Clearly down; review together with consecutive records", zh: "明显下降；建议结合连续记录一起回顾" });
   if (direction === "baseline_only") return localizedText({ en: "Waiting for a recent measurement", zh: "等待近期测量" });
+  if (direction === "unavailable") return localizedText({ en: "Reference unavailable at this age", zh: "此年龄暂无可比较参考" });
   return localizedText({ en: "No trend yet", zh: "暂无趋势" });
 }
 
@@ -152,6 +153,7 @@ function formatValue(value: number, unit: "g" | "cm"): string {
 function trendLabel(item: GrowthCurveItem): string {
   const trend = item.personal_trend;
   if (!trend) return "";
+  if (trend.direction === "unavailable") return localizedText({ en: "Reference unavailable at this age", zh: "此年龄暂无可比较参考" });
   const birth = trend.birth_percentile == null ? localizedText({ en: "Birth —", zh: "出生 —" }) : localizedText({ en: "Birth P{percentile}", zh: "出生 P{percentile}" }, { percentile: Math.round(trend.birth_percentile) });
   if (trend.current_percentile == null) return birth;
   return localizedText({ en: "{birth} · current P{percentile}", zh: "{birth} · 当前 P{percentile}" }, { birth, percentile: Math.round(trend.current_percentile) });

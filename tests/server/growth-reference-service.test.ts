@@ -47,6 +47,11 @@ describe("growth reference payload", () => {
       current_birth_day_number: 18
     });
     expect(payload.source.band_label).toBe("2nd-98th percentile reference band");
+    expect(payload.source).toMatchObject({
+      coverage: "birth_to_day_730",
+      calculation: "lms",
+      coverage_label: "Birth to day 730 (approximately 24 months)"
+    });
 
     const weight = payload.items.find((item) => item.measure_type === "weight_kg");
     expect(weight).toMatchObject({
@@ -127,5 +132,81 @@ describe("growth reference payload", () => {
     expect(payload.available).toBe(false);
     expect(payload.missing).toEqual(["sex", "birth_date"]);
     expect(payload.items).toEqual([]);
+  });
+
+  test("uses the daily WHO reference through day 730 and fails closed at day 731", async () => {
+    const store = createMemoryStore({
+      profile: {
+        child_name: "Demo Baby",
+        child_birth_date: "2026-01-10",
+        phase: "newborn_or_baby"
+      }
+    });
+    await updateStableChildFacts(
+      store,
+      {
+        sex: "male",
+        birth_date: "2026-01-10",
+        birth_weight_g: 3200
+      },
+      "2028-01-10T04:00:00Z"
+    );
+
+    await new EventService(store).create(
+      {
+        event_type: "growth_measurement",
+        occurred_at: "2028-01-10T02:00:00Z",
+        amount_value: 12.1482,
+        amount_unit: "kg",
+        details_json: { measure_type: "weight_kg" }
+      },
+      "dad",
+      "2028-01-10T04:00:00Z"
+    );
+
+    const day730 = await buildGrowthCurvePayload(store, "2028-01-10T04:00:00Z");
+    const day730Weight = day730.items.find((item) => item.measure_type === "weight_kg");
+    expect(day730.profile_context.current_age_days).toBe(730);
+    expect(day730Weight).toMatchObject({
+      status: "within_reference_band",
+      reference: {
+        age_days: 730,
+        p50: 12148
+      },
+      latest_measurement: {
+        age_days: 730,
+        percentile: 50,
+        z_score: 0
+      }
+    });
+
+    await new EventService(store).create(
+      {
+        event_type: "growth_measurement",
+        occurred_at: "2028-01-11T02:00:00Z",
+        amount_value: 12.2,
+        amount_unit: "kg",
+        details_json: { measure_type: "weight_kg" }
+      },
+      "dad",
+      "2028-01-11T04:00:00Z"
+    );
+
+    const day731 = await buildGrowthCurvePayload(store, "2028-01-11T04:00:00Z");
+    const day731Weight = day731.items.find((item) => item.measure_type === "weight_kg");
+    expect(day731.profile_context.current_age_days).toBe(731);
+    expect(day731Weight).toMatchObject({
+      status: "unavailable",
+      reference: null,
+      latest_measurement: {
+        age_days: 731,
+        percentile: null,
+        z_score: null
+      },
+      personal_trend: {
+        direction: "unavailable",
+        label: "Reference unavailable at this age"
+      }
+    });
   });
 });

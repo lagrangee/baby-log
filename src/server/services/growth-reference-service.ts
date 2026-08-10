@@ -61,6 +61,9 @@ export interface GrowthCurvePayload {
     standard: "who_child_growth_standards";
     dataset: string;
     dataset_url: string;
+    coverage: "birth_to_day_730";
+    coverage_label: string;
+    calculation: "lms";
     band: "p2_p98";
     band_label: string;
     note: string;
@@ -82,7 +85,7 @@ const METRICS: Array<{ measureType: GrowthCurveMeasureType; label: string; unit:
 ];
 
 const DATASET_URL = "https://www.cdc.gov/growth-chart-training/media/files/WHOref_d.csv";
-const MAX_REFERENCE_AGE_DAYS = 91;
+const MAX_REFERENCE_AGE_DAYS = 730;
 
 export async function buildGrowthCurvePayload(store: Store, nowIso: string): Promise<GrowthCurvePayload> {
   const profile = await store.getProfile();
@@ -101,11 +104,14 @@ export async function buildGrowthCurvePayload(store: Store, nowIso: string): Pro
     missing,
     source: {
       standard: "who_child_growth_standards" as const,
-      dataset: "CDC WHOref_d LMS",
+      dataset: "CDC WHOref_d LMS (WHO birth to day 730)",
       dataset_url: DATASET_URL,
+      coverage: "birth_to_day_730" as const,
+      coverage_label: "Birth to day 730 (approximately 24 months)",
+      calculation: "lms" as const,
       band: "p2_p98" as const,
       band_label: "2nd-98th percentile reference band",
-      note: "For family observation and review only; it does not replace well-child care or pediatric judgment."
+      note: "LMS-derived descriptive reference for family observation and review only; it does not replace well-child care or pediatric judgment."
     },
     profile_context: {
       sex: stableFacts.sex,
@@ -166,7 +172,7 @@ function buildGrowthCurveItem(
       common_position_percent: null,
       personal_trend: personalTrend,
       status: "unavailable",
-      message: "The app currently provides WHO reference bands for 0-13 weeks after birth only."
+      message: "The app currently provides WHO reference bands from birth through day 730 (approximately 24 months)."
     };
   }
 
@@ -255,7 +261,7 @@ function personalTrendFor(
   if (birthFactValue == null) return null;
   const birth = percentileFor(sex, metric, 0, birthFactValue);
   if (!birth) return null;
-  if (!latestMeasurement || latestMeasurement.source === "birth_fact" || latestMeasurement.z_score == null || latestMeasurement.percentile == null) {
+  if (!latestMeasurement || latestMeasurement.source === "birth_fact") {
     return {
       birth_percentile: birth.percentile,
       current_percentile: null,
@@ -264,6 +270,17 @@ function personalTrendFor(
       z_score_delta: null,
       direction: "baseline_only",
       label: "Waiting for a recent measurement"
+    };
+  }
+  if (latestMeasurement.z_score == null || latestMeasurement.percentile == null) {
+    return {
+      birth_percentile: birth.percentile,
+      current_percentile: null,
+      birth_z_score: birth.zScore,
+      current_z_score: null,
+      z_score_delta: null,
+      direction: "unavailable",
+      label: "Reference unavailable at this age"
     };
   }
   const delta = roundToHundredth(latestMeasurement.z_score - birth.zScore);
@@ -302,11 +319,13 @@ function daysBetweenDates(startDate: string, endDate: string): number {
 }
 
 function roundToTenth(value: number): number {
-  return Math.round(value * 10) / 10;
+  const rounded = Math.round(value * 10) / 10;
+  return Object.is(rounded, -0) ? 0 : rounded;
 }
 
 function roundToHundredth(value: number): number {
-  return Math.round(value * 100) / 100;
+  const rounded = Math.round(value * 100) / 100;
+  return Object.is(rounded, -0) ? 0 : rounded;
 }
 
 function clamp(value: number, min: number, max: number): number {
